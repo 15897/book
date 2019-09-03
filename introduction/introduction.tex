@@ -1,0 +1,141 @@
+\chapter{Introduction}
+
+Parallelism and concurrency is everywhere today, occurring at multiple levels in both hardware and the software stack.  
+%
+\begin{itemize}
+\item Data centers typically consists of thousands of computers.
+
+\item Some supercomputers have tens of thousands and even millions of processors.  Many large computations such as weather simulations are run on these computers.
+
+\item  Increasingly, multicore computers with modest numbers of cores ranging from 10-100 are being used to perform large computations that were previously considered to require distributed systems.  These include many graph analysis that operate on graphs consisting of billions of vertices and edges. 
+
+\item  Any reasonably popular web service today utilizes many ``instances'' of the server software to handle requests.
+
+\item  Our personal computers are parallel computers that typically has multiple processing units, called \defn{cores}.
+%
+In fact, even our phones typically have multiple processors, with new phones typically having 4-8 cores.
+
+\item Graphics Processing Units (GPUs) typically come anywhere between 50-1000 processors.
+\end{itemize} 
+
+
+\begin{example}[Parallelism in Diderot]
+The Diderot system that we use in this lecture relies on parallelism
+to ensure responsiveness.  
+%
+Currently, Diderot uses four separate servers to handle all incoming web requests.
+%
+Each server takes turns to respond to requests and is controlled by a load balancer that assigns requests to servers.
+%
+The software architecture is thus parallel.
+
+Each server in turn runs on a computer with 2-cores, and thus Diderot uses a total of $8$ cores to handle all requests from approximately 1500 users.
+%
+
+In addition to a web servers, Diderot also has a Postgres database server that organizes data in a traditional, relational database.  
+%
+The postgres server architecture is designed specifically to take advantage of multicore computers.
+%
+In Diderot, the Postgres server runs on a  relatively large multicore machine with 8-cores.   
+
+You can read more about how the Postgres server exploits parallelism
+%
+\href{https://www.percona.com/blog/2019/02/21/parallel-queries-in-postgresql/}
+{in this blog}.
+\end{example}
+
+
+
+\begin{gram}[Distributed versus Shared Memory Parallelism]
+Broadly speaking, we can classify all parallel hardware into two classes: distributed and shared memory.
+%
+
+Distributed parallel systems typically consist of computers that run independently but communicate via some kind of interconnection network.
+%
+In supercomputers, the interconnection network is typically carefully designed to facilitate fast and efficient communication between the computers.
+%
+In data centers, which can have tens of thousands of computers, the interconnection network is typically built on top of readily available technologies such as Ethernet.
+
+INSERT PICTURE
+
+Hardware shared memory parallel systems consists of tightly interconnected processing units, which are today typically called ``cores'', sharing a common memory system.
+%
+The memory is shared in the sense that any processor can access any piece of memory by using hardware memory access instructions.
+%
+In the early days of parallel hardware, shared memory processors only had a relatively small number of cores, e.g., a handful.
+%
+Today, modern multicore computers can have as many as 100 cores on a single chip, and multiple chips may be connected together in a ``multi-node'' shared memory architecture.
+%
+For example,
+%
+the
+\href{https://www.dell.com/en-us/work/shop/povw/poweredge-r940xa}{PowerEdge Servers}
+%
+from Dell can today be configured to contain 4 nodes each of which can have 28 cores on a single chip, totaling more than 100 cores sharing the same memory. 
+%
+Total memory can easily exceed one terabyte or more.
+%
+Typical cost per core is \$100.  
+%
+For example, a machine with approximately 100 cores would cost ten thousand dollars.
+
+INSERT PICTURE
+
+\end{gram}
+
+\begin{remark}
+A multicore computer with 100 cores is typically at least one order of magnitude faster and more energy efficient than a comparable distributed system.
+%
+This is an important factor that will likely influence future hardware and software systems. 
+\end{remark}
+
+\begin{gram}
+The parallelism exhibited by the various applications above are different in one particular nature: the dependencies between the tasks comprising them.
+%
+Some applications such as web servers involve running mostly independent jobs.
+%
+Others, such as those in a database systems involves running interdependent jobs, e.g., two queries executing in parallel might have to access the same database tables.
+%
+Many jobs performed on multicore computers today, e.g., various data analyses, typically consist of millions of tightly interdependent tasks. 
+%
+
+These different characteristics typically favor different architectures.
+%
+For example, a web server might be better suited for a distributed architecture because of the relative lack of dependencies between jobs.
+%
+Jobs such as graph analysis that involve many inter-dependent parallel tasks in turn are best suited for hardware shared memory architectures. 
+%
+Other jobs such as database servers can benefit greatly from using a shared memomry in which to cache various data, making again hardware shared memory systems a better choice.
+\end{gram}
+
+\section{Models of Parallelism}
+
+The many different kinds of parallel hardware ranging from distributed to shared memory systems, and many different kinds of applications, have led to the development of many different abstract models for parallelism, including, for example
+%
+\begin{itemize}
+\item PRAM model,
+\item Work-Depth model,
+\item and many flavors of distributed models, MapReduce, Congest, etc.
+\end{itemize}
+
+There can be a great degree of variability between these models, and it can require many hours of careful work to ``port'' an algorithm from one model to another.
+%
+It would not be uncommon for a graduate student to spend years to adopt a known algorithm for a specific model and analyze its various properties.
+%
+I therefore find it rather unsatisfactory to talk about specific models of computation.  
+%
+My position is that if you do need them, then you can learn them (indeed understanding the specific details of any specific model is not difficult.)
+%
+
+%
+What I would like to do here is to get to essence of the matter.  
+
+That all being said.  The question is how.  
+%
+What I will try to develop in this course is an approach based on the first and in my view the most successful model of computation: Church's Lambda Calculus.
+
+  
+
+
+
+ 
