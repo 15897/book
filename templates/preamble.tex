@@ -1,0 +1,330 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BEGIN: 897 Macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PAGE LAYOUT
+\addtolength{\parskip}{7pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BEGIN: Latin abbreviations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\aka}{\textit{a.k.a.}\xspace}
+\newcommand{\etc}{\textit{etc.}\xspace}
+\newcommand{\ie}{\textit{i.e.}\xspace}
+\newcommand{\eg}{\textit{e.g.}\xspace}
+\newcommand{\cf}{\textit{cf.}\xspace}
+\newcommand{\vs}{\textit{vs.}\xspace}
+\newcommand{\etal}{\textit{et.~al.}\xspace}
+\newcommand{\adhoc}{\textit{ad~hoc}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END: Latin abbreviations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BEGIN: Section references
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\partref}[1]{Part~\ref{part:#1}}
+\newcommand{\chref}[1]{Chapter~\ref{ch:#1}}
+\newcommand{\chreftwo}[2]{Chapters \ref{ch:#1} and~\ref{ch:#2}}
+\newcommand{\chrefthree}[3]{Chapters \ref{ch:#1}, and~\ref{ch:#2}, and~\ref{ch:#3}}
+\newcommand{\secref}[1]{Section~\ref{sec:#1}}
+\newcommand{\subsecref}[1]{Subsection~\ref{subsec:#1}}
+\newcommand{\secreftwo}[2]{Sections \ref{sec:#1} and~\ref{sec:#2}}
+\newcommand{\secrefthree}[3]{Sections \ref{sec:#1},~\ref{sec:#2},~and~\ref{sec:#3}}
+\newcommand{\appref}[1]{Appendix~\ref{app:#1}}
+\newcommand{\lstref}[1]{Listing~\ref{lst:#1}}
+\newcommand{\lstreftwo}[2]{Listings~\ref{lst:#1} and~\ref{lst:#2}}
+
+\newcommand{\figref}[1]{Figure~\ref{fig:#1}}
+\newcommand{\figreftwo}[2]{Figures~\ref{fig:#1} and~\ref{fig:#2}}
+\newcommand{\figrefthree}[3]{Figures~\ref{fig:#1}, \ref{fig:#2} and~\ref{fig:#3}}
+\newcommand{\figreffour}[4]{Figures~\ref{fig:#1},~\ref{fig:#2},~\ref{fig:#3}~and~\ref{fig:#4}}
+\newcommand{\figpageref}[1]{page~\pageref{fig:#1}}
+\newcommand{\tabref}[1]{Table~\ref{tab:#1}}
+\newcommand{\tabreftwo}[2]{Tables~\ref{tab:#1} and~\ref{tab:#1}}
+
+\newcommand{\stref}[1]{step~\ref{step:#1}}
+\newcommand{\caseref}[1]{case~\ref{case:#1}}
+\newcommand{\lineref}[1]{Line~\ref{line:#1}}
+\newcommand{\linereftwo}[2]{Lines~\ref{line:#1} and~\ref{line:#2}}
+\newcommand{\linerefthree}[3]{Lines~\ref{line:#1},~\ref{line:#2},~and~\ref{line:#3}}
+\newcommand{\linerefrange}[2]{lines \ref{line:#1} through~\ref{line:#2}}
+\newcommand{\thmref}[1]{Theorem~\ref{thm:#1}}
+\newcommand{\thmreftwo}[2]{Theorems~\ref{thm:#1} and~\ref{thm:#2}}
+\newcommand{\thmpageref}[1]{page~\pageref{thm:#1}}
+\newcommand{\lemref}[1]{Lemma~\ref{lem:#1}}
+\newcommand{\lemreftwo}[2]{Lemmas~\ref{lem:#1} and~\ref{lem:#2}}
+\newcommand{\lemrefthree}[3]{Lemmas~\ref{lem:#1},~\ref{lem:#2},~and~\ref{lem:#3}}
+\newcommand{\lempageref}[1]{page~\pageref{lem:#1}}
+\newcommand{\adtref}[1]{ADT~\ref{adt:#1}}
+\newcommand{\corref}[1]{Corollary~\ref{cor:#1}}
+\newcommand{\costref}[1]{Cost Specification~\ref{cost:#1}}
+\newcommand{\defref}[1]{Definition~\ref{def:#1}}
+\newcommand{\defreftwo}[2]{Definitions~\ref{def:#1} and~\ref{def:#2}}
+\newcommand{\defpageref}[1]{page~\pageref{def:#1}}
+\renewcommand{\eqref}[1]{Equation~(\ref{eq:#1})}
+\newcommand{\eqreftwo}[2]{Equations (\ref{eq:#1}) and~(\ref{eq:#2})}
+\newcommand{\eqpageref}[1]{page~\pageref{eq:#1}}
+\newcommand{\grref}[1]{\ref{gr:#1}}
+\newcommand{\ineqref}[1]{Inequality~(\ref{ineq:#1})}
+\newcommand{\ineqreftwo}[2]{Inequalities (\ref{ineq:#1}) and~(\ref{ineq:#2})}
+\newcommand{\ineqpageref}[1]{page~\pageref{ineq:#1}}
+\newcommand{\itemref}[1]{Item~\ref{item:#1}}
+\newcommand{\itemreftwo}[2]{Item~\ref{item:#1} and~\ref{item:#2}}
+\newcommand{\propref}[1]{Proposition~[\ref{prop:#1}]}
+\newcommand{\synref}[1]{Syntax~\ref{syn:#1}}
+
+\newcommand{\exref}[1]{Example~\ref{ex:#1}}
+\newcommand{\exrref}[1]{Exercise~\ref{exr:#1}}
+\newcommand{\probref}[1]{Problem~\ref{prob:#1}}
+\newcommand{\algref}[1]{Algorithm~\ref{alg:#1}}
+\newcommand{\algreftwo}[2]{Algorithms~\ref{alg:#1} and~\ref{alg:#2}}
+\newcommand{\dsref}[1]{Data Structure~\ref{ds:#1}}
+\newcommand{\dtref}[1]{Design Technique~\ref{dt:#1}}
+\newcommand{\solref}[1]{Solution~\ref{sol:#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% END: Section references
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BEGIN: LANGUAGE DEFINITIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\kw}[1]{\cd{#1}}
+
+\newcommand{\unit}{\cd{unit}}
+\newcommand{\bool}{\cd{bool}}
+\newcommand{\nat}{\cd{nat}}
+\newcommand{\str}{\cd{string}}
+\newcommand{\true}{\cd{true}}
+\newcommand{\false}{\cd{false}}
+
+\newcommand{\inl}[1]{\cd{inl}_{#1}}
+\newcommand{\inr}[1]{\cd{inr}_{#1}}
+
+\newcommand{\isZero}[1]{\cd{isZero}~{#1}}
+\newcommand{\kwzero}{\cd{zero}}
+\renewcommand{\succ}[1]{\cd{succ}~{#1}}
+\newcommand{\pred}[1]{\cd{pred}~{#1}}
+\renewcommand{\ifthenelse}[3]{\cd{if}~{#1}~\cd{then}~{#2}~\cd{else}~{#3}}
+\newcommand{\plusone}{\cd{succ}}
+\newcommand{\typebranch}{\cd{branch}}
+\renewcommand{\L}{\Lambda}
+
+\newcommand{\letin}[4]{\cd{let}~{#1:#2}~=~{#3}~\cd{in}~{#4}~\cd{end}}
+\newcommand{\caseofflat}[5]{\cd{case}~{#1}~\cd{of}~{#2} \Rightarrow {#3} ~|~{#4} \Rightarrow {#5}}
+
+\newcommand{\pair}[2]{\langle {#1}, {#2} \rangle}
+\newcommand{\fst}[1]{\cd{first}(#1)}
+\newcommand{\snd}[1]{\cd{second}(#1)}
+
+\newcommand{\fix}[4]{\cd{fix}~{#1 \cd{(}{#2}\cd{)}\,:\,{#3}~\cd{is}~{#4}}~\cd{end}}
+\newcommand{\kwref}{\cd{ref}}
+
+\newcommand{\hole}{\Box}
+
+\newcommand{\kwrec}[5]{\cd{rec}~{#1}~\cd{\{}~{\kwzero} \Rightarrow {#2} ~|~{\succ{#3}~ \kw{with}~{#4}~ \Rightarrow {#5}\cd{\}}}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% END: LANGUAGE DEFINITIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BEGIN: COMMON MACROS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\length}[1]{\cd{length}({#1})}
+
+
+%\newcommand{\todo}[1]{{\bf{[NOTE:{#1}]}}}
+\newcommand{\todo}[1]{}
+
+\newcommand{\rlabel}[1]{\mbox{\small{\bf ({#1})}}}
+
+\newcommand{\tablerow}{\\[5ex]}
+\newcommand{\tableroww}{\\[7ex]}
+\newcommand{\tableline}{
+\vspace*{2ex}\\
+\hline\\ 
+\vspace*{2ex}}
+
+% Don't care
+\newcommand{\dontcare}{\_}
+
+
+
+\newcommand{\out}[1] {}
+\newcommand{\sthat}{~|~}
+
+%% definitions
+\newcommand{\defi}[1]{{\bfseries\itshape #1}}
+
+% Useful shorthands.
+\newcommand{\abs}[1]{\left| #1\right|}
+\newcommand{\card}[1]{\left| #1\right|}
+\newcommand{\norm}[1]{\left\| #1\right\|}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+  \renewcommand{\choose}[2]{{{#1}\atopwithdelims(){#2}}}
+\newcommand{\ang}[1]{\langle#1\rangle}
+\newcommand{\paren}[1]{\left(#1\right)}
+%\newcommand{\prob}[1]{\Pr\left\{ #1 \right\}}
+\newcommand{\expect}[1]{\mathrm{E}\left[ #1 \right]}
+\newcommand{\expectsq}[1]{\mathrm{E}^2\left[ #1 \right]}
+\newcommand{\variance}[1]{\mathrm{Var}\left[ #1 \right]}
+\newcommand{\twodots}{\mathinner{\ldotp\ldotp}}
+
+% Standard number sets.
+\newcommand{\reals}{{\mathrm{I}\!\mathrm{R}}}
+\newcommand{\integers}{\mathbf{Z}}
+\newcommand{\naturals}{{\mathrm{I}\!\mathrm{N}}}
+\newcommand{\rationals}{\mathbf{Q}}
+\newcommand{\complex}{\mathbf{C}}
+
+% Special styles.
+\newcommand{\proc}[1]{\ifmmode\mbox{\textsc{#1}}\else\textsc{#1}\fi}
+\newcommand{\procdecl}[1]{
+  \proc{#1}\vrule width0pt height0pt depth 7pt \relax}
+  \newcommand{\func}[1]{\ifmmode\mathrm{#1}\else\textrm{#1}fi} %
+%  Multiple cases.  
+\renewcommand{\cases}[1]{\left\{
+  \begin{array}{ll}#1\end{array}\right.}
+  \newcommand{\cif}[1]{\mbox{if $#1$}} 
+
+%% spacing hacks
+\newcommand{\longpage}{\enlargethispage{\baselineskip}}
+\newcommand{\shortpage}{\enlargethispage{-\baselineskip}}
+
+%% Lecture Title 
+\newcommand{\lectureTitle}[2]{
+{
+\bf
+\begin{center}
+Parallelism and Concurrency\\[1mm]
+\linethickness{1.5pt}
+\line(1,0){340}
+\end{center}
+}
+}
+
+\newcommand{\reduces}{\Downarrow}
+\newcommand{\steps}{\rightarrow}
+\newcommand{\msteps}{\rightarrow^*}
+
+\newcommand{\spaceOne}{\vskip*{1cm}}
+\newcommand{\spaceTwo}{\vskip*{2cm}}
+\newcommand{\spaceThree}{\vskip*{3cm}}
+\newcommand{\spaceFour}{\vskip*{4cm}}
+\newcommand{\spaceFive}{\vskip*{5cm}}
+
+
+\renewcommand{\l}{\lambda}
+\newcommand{\eqa}{~=_{\alpha}~}
+\newcommand{\eqb}{~=_{\beta}~}
+\newcommand{\sub}[2]{[{#1}/{#2}]}
+\newcommand{\ra}{~\rightarrow~}
+\newcommand{\red}{\ra}
+\newcommand{\redb}{~\rightarrow_{\beta}~}
+\newcommand{\redbs}{~\rightarrow_{\beta}^{*}~}
+
+\newcommand{\shift}[3]{\ensuremath{\uparrow_{#2}^{#3}{(#1)}}}
+\newcommand{\dom}[1]{\ensuremath{\mathrm{dom}({#1})}}
+\newcommand{\define}{\ensuremath{\stackrel{def}{=}}}
+
+
+%\newcommand{\eqdef}{\stackrel{{\rm def}}{=}}
+\newcommand{\eqdef}{\mathrel{\colon=}}
+\newcommand{\is}{\equiv}
+
+% arrows of various kinds
+\newcommand{\pto}{\rightharpoonup}	% partial function
+\newcommand{\fto}{\pto_{\it fin}}	% finite partial function
+\newcommand{\inclu}{\hookrightarrow}	% inclusion
+\newcommand{\mono}{\rightarrowtail}	% monomorphism
+\newcommand{\epi}{\twoheadrightarrow}	% epimorphism
+%\newcommand{\leadsto}{\rightsquigarrow}	% leads to
+\newcommand{\iso}{\cong}		% isomorphism
+
+\newcommand{\id}{\mathop{\it id}\nolimits}	% identity function
+
+% set braces
+\newcommand{\set}[2]{\{\,#1\,\mid\,#2\,\}}
+\newcommand{\singleton}[1]{\{\,#1\,\}}
+
+% families
+\newcommand{\family}[2]{\langle\,#1\,\rangle_{#2}}
+
+% set operations and relations
+\newcommand{\cross}{\times}		% cartesian doubts
+\newcommand{\union}{\cup}
+\newcommand{\intersect}{\cap}
+\newcommand{\subs}{\subseteq}
+\newcommand{\el}{\in}
+\newcommand{\nel}{\notin}
+\newcommand{\Dmn}{\mathop{\rm dom}}
+\newcommand{\Rng}{\mathop{\rm rng}}
+\newcommand{\Pow}{\mathop{\mathcal{P}}}
+\newcommand{\Img}{\mathop{\rm img}\nolimits}
+
+% turnstiles
+\newcommand{\ts}{\vdash}
+\newcommand{\tss}{\Vdash}
+\newcommand{\tsc}{\vDash}
+\newcommand{\dts}{\models}
+
+% least and greatest elements
+\newcommand{\bottom}{\bot}
+%\newcommand{\top}{\top}
+
+% connectives
+\newcommand{\fa}{\forall}
+\newcommand{\te}{\exists}
+%\newcommand{\implies}{\mathrel\supset}
+
+% meaning function
+\newcommand{\dlb}{\lbrack\!\lbrack}
+\newcommand{\ldb}{\dlb}
+\newcommand{\drb}{\rbrack\!\rbrack}
+\newcommand{\rdb}{\drb}
+\newcommand{\mean}[1]{\mathop{\dlb #1\drb}\nolimits}
+
+% sequence of #1's, numbered up to #2  (e.g., seq{x}{n} for x1 ... xn   )
+\newcommand{\seq}[2]{#1_{1} \ldots #1_{#2}}  
+
+% comma--separated sequence
+\newcommand{\cseq}[2]{#1_{1},\ldots,#1_{#2}}
+
+% free variables
+\newcommand{\FV}{\mathop{\rm FV}\nolimits}
+
+% syntactic substitution of #1 for #2 in #3
+\newcommand{\subst}[3]{[#1/#2]#3}
+
+% context-free grammars
+\newcommand{\bnfdef}{\mathrel{\colon\colon\mathord{=}}}
+\newcommand{\bnfalt}{\mathrel{\mid}}
+\newcommand{\bnfas}{\bnfdef}
+
+
+\newcommand{\defn}[1]{\textbf{\emph{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% END: COMMON MACROS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Chapter: Lambda
+\newcommand{\terms}{\ensuremath{\mathcal{T}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% END: 897 Macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+

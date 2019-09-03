@@ -1,0 +1,21 @@
+\documentclass{book}
+%% Include all packages and only the packages here
+\usepackage{templates/packages}
+
+% Define diderot environments, do not modify.
+\usepackage{templates/diderot}
+
+% Include all commands/macors and only those here.
+% Do not include packages in preamble.
+\input{templates/preamble}
+
+% Leave out chapter numbers from section numbers
+\renewcommand*\thesection{\arabic{section}}
+% number up to and including subsubsection
+\setcounter{secnumdepth}{3}
+
+\begin{document}
+
+\include{introduction/introduction}
+
+\end{document}
