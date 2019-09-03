@@ -20,23 +20,32 @@ In fact, even our phones typically have multiple processors, with new phones typ
 
 
 \begin{example}[Parallelism in Diderot]
-The Diderot system that we use in this lecture relies on parallelism
+The Diderot system  used in this course exploits parallelism
 to ensure responsiveness.  
 %
 Currently, Diderot uses four separate servers to handle all incoming web requests.
 %
 Each server takes turns to respond to requests and is controlled by a load balancer that assigns requests to servers.
 %
-The software architecture is thus parallel.
-
 Each server in turn runs on a computer with 2-cores, and thus Diderot uses a total of $8$ cores to handle all requests from approximately 1500 users.
 %
+The web server architecture of Diderot exploits parallelism in both hardware and software.
+
 
 In addition to a web servers, Diderot also has a Postgres database server that organizes data in a traditional, relational database.  
 %
 The postgres server architecture is designed specifically to take advantage of multicore computers.
 %
 In Diderot, the Postgres server runs on a  relatively large multicore machine with 8-cores.   
+
+Diderot is hosted on Amazon Web Services (AWS) and makes extensive use of AWS services, including for load balancing.
+%
+You can learn
+%
+\href{https://aws.amazon.com/elasticloadbalancing/}
+{AWS load balancers}.
+%
+Even though the minimum number of servers that Diderot uses is set to be four, the number of servers increases at high load times automatically.
 
 You can read more about how the Postgres server exploits parallelism
 %
@@ -87,6 +96,21 @@ INSERT PICTURE
 A multicore computer with 100 cores is typically at least one order of magnitude faster and more energy efficient than a comparable distributed system.
 %
 This is an important factor that will likely influence future hardware and software systems. 
+%
+
+You can find many resources that make this same point. 
+Here are a few
+\begin{itemize}
+\item 
+\href{https://www.usenix.org/system/files/conference/osdi12/osdi12-final-126.pdf}
+{Kyrola et al's paper on using laptops for ``big data'' processing}.
+\item 
+\href{http://www.frankmcsherry.org/graph/scalability/cost/2015/01/15/COST.html}
+{A direct comparison between large-scale distributed systems and a laptop.}
+
+\end{itemize}
+
+
 \end{remark}
 
 \begin{gram}
@@ -128,12 +152,21 @@ My position is that if you do need them, then you can learn them (indeed underst
 %
 
 %
-What I would like to do here is to get to essence of the matter.  
+What I would like to do in this course is to get to essence of the matter.  
 
 That all being said.  The question is how.  
 %
-What I will try to develop in this course is an approach based on the first and in my view the most successful model of computation: Church's Lambda Calculus.
-
+In this course, I will attempt to develop an approach based on Church's Lambda Calculus.
+%
+The idea is to model parallelism purely as a mathematical---rather than machine dependent---construct.
+%
+Thus, we don't need a machine model to understand parallelism.
+%
+To implement an algorithm developed in this model we will need to use a programming language and system that supports parallelism.
+%
+Typically, such a language and system will target a particular machine architecture, such as a multicore computer or a distributed system.
+% 
+To understand the efficiency and performance of our algorithms, we will use mathematical cost models.
   
 
 
