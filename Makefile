@@ -59,13 +59,12 @@ exam:
 	$(PDFLATEX) --jobname="exam" '\input{exam}' ; 
 	$(PDFLATEX) --jobname="exam" '\input{exam}' ; \
 
-
 ## intro
-intro: book introduction/introduction.tex
-
-	$(PDFLATEX) --jobname="intro" '\includeonly{introduction/introduction}\input{book} '
+intro: book introduction/introduction.tex introduction/introduction.xml
+	$(PDFLATEX) --jobname="introduction" '\includeonly{introduction/introduction}\input{book} '
+	cp introduction.pdf ./introduction
 
 ## lambda
-lambda: book lambda/lambda.tex 
+lambda: book lambda/lambda.tex lambda/lambda.xml
 	$(PDFLATEX) --jobname="lambda" '\includeonly{lambda/lambda} \input{book} '
-
+	cp lambda.pdf ./lambda
