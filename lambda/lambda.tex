@@ -205,7 +205,7 @@ Consider a lambda abstraction of the form $\l x. t$, which denotes a
 function.
 %
 We refer to the variable $x$ as the \defn{formal parameter} or more
-simply as the \defn{argument} of the abstraction (function),
+simply as the \defn{parameter} of the abstraction (function),
 %
 and
 %
@@ -256,10 +256,36 @@ A term $t$ is closed if $FV(t) = \varnothing$. Otherwise $t$ is open.
 \end{definition}
 
 
+\section{Alpha Conversion and Alpha Equivalence}
+In any abstraction, the formal parameter acts simply as a placeholder and therefore we can change it as we like.
+%
+For example, consider the abstraction $\l x.t$, where $x$ is the argument. We can rename $x$ to any variable, say $y$, and the abstraction remains the same.
+%  
+This process of renaming the bound variables is called
+\defn{$\alpha$-conversion} or \defn{$\alpha$-variation}.  
+%
+
+\begin{definition}[Alpha-Equivalence]
+Two terms that are reducible to each other by $\alpha$-conversions are
+\emph{alpha equivalent}. We denote $\alpha$-equivalent terms $t_1$ and
+$t_2$ as $t_1 \eqa t_2$.
+\end{definition}
+
+\begin{example}
+\begin{enumerate}
+\item $\l x.x \eqa \l y.y$. 
+\item $\l x. \l y. \l z. x ~y~z \eqa \l z. \l y. \l x. z~y~x$.
+\item $\l x.t \eqa \l y.[y/x]t$ if  $y \not\in FV(t)$.
+\end{enumerate}
+\end{example}
+
+\begin{exercise}
+Show that $\eqa$ is an equivalence relation.
+\end{exercise}
 
 
 \section{Substitution}
-\label{sec:substitution}
+\label{sec:lambda::sub}
 
 A lambda abstraction denotes a function.  How do we evaluate a
 function or a lambda abstraction at a particular value?  For example,
@@ -271,21 +297,21 @@ example substitution, where we substitute the value $2$ for the
 variable $x$ in $(\l x.+~1~x)$.  Formally, we define substitution as
 follows.
 
-\begin{definition}
-The substitution of a term, $t'$ for a variable $x \in V$ in a term
+\begin{definition}[Substitution]
+\label{def:lambda::sub::basic}
+The \defn{substitution} of a term, $t'$ for a variable $x \in V$ in a term
 $t$, denoted by $[t'/x]t$, is an instance of $t$ where all the free
 occurrences $x$ is replaced by the term $t'$.
 \end{definition}
 
 Throughout this course, we will use the notation $[t'/x]t$ to denote a
 substitution of $t'$ for $x$ in $t$.  Different notations are
-preferred by different textbooks or authors. Two other commonly used
-notations are $t[t'/x]$ and $[x:=t']t$.  Pierce's book uses the
-notation $[x \rightarrow t']t$.
-
+preferred by different textbooks or authors. Other commonly used
+notations include $t[t'/x]$, $[x:=t']t$, and  $[x \leftarrow t']t$.  
 
 \begin{example}
-Some example substitutions.
+\label{xmpl:lambda::sub::basic}
+Some example substitutions follow
 \begin{enumerate}
 \item $[\l y.y/x] (x~x)= (\l y.y)~(\l y.y)$
 
@@ -296,14 +322,17 @@ Some example substitutions.
 \end{enumerate}
 \end{example}
 
-A substitution, as we defined it, is actually ``incorrect''.  For
+\begin{gram}[Capture]
+\label{grm:lambda::sub::capture}
+A substitution, as we defined it, is actually incorrect.  For
 example, consider the lambda abstraction $\l y.x$, the constant
 function, and the substitution $[y/x](\l y.x)$, which is equal to $\l
 y.y$, the identity function.  Thus, the substitution would naively
 change the constant function into the identity function.  Here, the
 problem is that the variable $x$, a free variable, is substituted with
 $y$, which then becomes bound by the lambda abstraction.  In this
-case, we say that $y$ is \emph{captured} in the substitution.
+case, we say that $y$ is \defn{captured} in the substitution.
+\end{gram}
 
 We do not want to transform free variables into bound variables during
 the substitution process.  We need to redefine substitution to avoid
@@ -314,8 +343,8 @@ any modification of the results, but we cannot change the name of $y$
 to $x$ without adversely affecting the results. The next definition
 avoids capture.
  
-\begin{definition} [Capture Avoiding substitution]
-\label{def:sub}
+\begin{definition}[Capture Avoiding substitution]
+\label{def:lambda:sub::sub::avoid}
 \[
 [t/x]y = \left\{ \begin{array}{ll}
         t & if~y = x \\
@@ -342,15 +371,18 @@ avoids capture.
 
 \begin{flex}
 \begin{exercise}
+\label{xrcs:lambda::sub::sub-undef}
 What does the substitution $[\l y.x~y~y/z](\l x.x~z)$ yield?
 \end{exercise}
 \begin{solution}
+\label{sol:lambda::sub-basic}
 This substitution is undefined.
 \end{solution}
 \end{flex}
 
 \begin{flex}
 \begin{exercise}
+\label{xrcs:lambda::sub::sub-rename}
 How about the substitution  $[\l y.x~y~y/z](\l y.y~z)$
 \end{exercise}
 \begin{solution}
@@ -359,37 +391,21 @@ $\l y.y~(\l y.x~y~y)$
 \end{flex}
 
 According to this definition a substitution that causes capture is
-undefined.  But something is just not right, because the lambda
+undefined.  But note that in the two exercises above, the lambda
 abstractions $\l x.x~z$ and $\l y.y~z$ differ only in the name of
-their bound variables.  Lambda abstractions denote functions, thus
-these two lambda abstractions are the same; it should not matter what
-the bound variables are named.
-
-\section{Alpha Conversion and Alpha Equivalence}
-One way to avoid capture is to rename the bound variables in a lambda
-abstraction.  To goal is to ensure that no bound variable has the same
-name as a free variable in the term being substituted.  
-
-This process of renaming the bound variables is called
-$\alpha$-conversion or $\alpha$-variation.  Two terms that are
-reducible to each other by $\alpha$-conversions are \emph{alpha
-  equivalent}. We denote $\alpha$-equivalent terms $t_1$ and $t_2$ as
-$t_1 \eqa t_2$.  
-
-\begin{enumerate}
-\item $\l x.x \eqa \l y.y$. 
-\item $\l x. \l y. \l z. x ~y~z \eqa \l z. \l y. \l x. z~y~x$.
-\item $\l x.t \eqa \l y.[y/x]t$ if  $y \not\in FV(t)$.
-\end{enumerate}
-
-\begin{exercise}
-Show that $\eqa$ is an equivalence relation.
-\end{exercise}
+their bound variables.  
+%
+Lambda abstractions denote functions, thus
+these two lambda abstractions are the same; the names of the
+the bound variables should not matter.
+%
+Indeed, one way to avoid capture is to rename the bound variables in a
+lambda abstraction.  To goal is to ensure that no bound variable has
+the same name as a free variable in the term being substituted.
 
 
-Alpha conversion gives us a way to define substitution without
-worrying about capture.  
 \begin{definition}[Substitution with Explicit Alpha Conversion]
+\label{def:lambda::sub::exp}
 \[
 [t/x]y = \left\{ \begin{array}{ll}
         t & if~y = x \\
@@ -432,7 +448,7 @@ with implicit alpha conversion applied as required.
 
 
 \begin{definition}[Substitution with Implicit Alpha Conversion]
-\label{def:sub3}
+\label{def:lambda:sub::sub-final}
 \[
 [t/x]y = \left\{ \begin{array}{ll}
         t & if~y = x \\
@@ -456,7 +472,6 @@ with implicit alpha conversion applied as required.
 \end{array} \right. 
 \]
 \end{definition}
-
 
 \section{$\beta$-reduction}
 
