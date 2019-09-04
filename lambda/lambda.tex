@@ -1,0 +1,563 @@
+\chapter{ Lambda Calculus}
+\label{ch:lambda}
+
+
+\section{Some History}
+\label{sec:lambda::history}
+
+\begin{gram}
+\label{grm:lambda::history}
+In 1928, Hilbert and Ackerman posed a challenge: devise an algorithm that takes as input a  first-order logic statement and determines whether that statement is valid or not.
+%
+Soon after, Alonzo Church, then Professor at the Department of Mathematics in Princeton, 
+started working on this problem.  His approach was to research the notion of ``function'' and create based on this notion a logical system that is sufficient for all of mathematics.
+%
+Lambda calculus emerged out of this research, also with contributions from 
+Church's students Kleene and Rosser.
+%
+This research led to Church's 1936 paper 
+\href{http://www.umut-acar.org/greats/church-1936.pdf}{showing that an algorithm as desired Hilbert and Ackerman's does not exist}.
+%
+His solution was to formulate a term in Lambda Calculus and show that there is no way to determine whether that term has a closed form (more precisely $\beta$-normal form). 
+%
+About one year later, Turing published \href{http://www.umut-acar.org/greats/turing-1937.pdf}{his paper}, where he establish the same result but using different techniques that are based on ``computing machines'', and 
+%
+proved that his and Church's approach were equivalent.
+
+\end{gram}
+
+\begin{gram}[Church and Turing]
+\label{grm:lambda::church-and-turing}
+Church and Turing's results are like two sides of a coin.  
+%
+Church's result is all about abstraction  offers a mathematical language in which computation can be expressed.
+%
+Turing's result is all about implementation: it convincingly describes how to implement computation.
+%
+\end{gram}
+
+\section{Abstract Syntax of Lambda Calculus}
+\label{sec:lambda::syn} 
+
+There are at least several ways to define the syntax of Lambda Calculus.
+%
+In this section, we go through these different ways, partly because they introduce some basic techniques that we shall use in this course.  
+
+\begin{definition}[Inductive Definition]
+\label{def:lambda::syn::inductive}
+Let $V$ be a countable set $V$ of variables.  We define the abstract
+syntax for lambda calculus inductively as follows.
+%
+$\terms$ is the {\em least} set of the terms that satisfy the following.
+\begin{enumerate}
+\item{if $x\in V$ then $x\in {\cal T}$}
+\item{if $t_1\in {\cal T}$ and $t_2\in {\cal T}$ then $t_1t_2\in {\cal T}$}
+\item{if $x\in V$ and $t\in {\cal T}$ then $\l   x.t\in {\cal T}$}
+\item{${\cal T}$ is the ``least'' set verifying the above properties}
+\end{enumerate}
+
+Each term in \terms is called a \defn{lambda term}.  
+\end{definition}
+
+\begin{example}
+\label{xrcs:lambda::syn::1} 
+Example lambda terms include
+\begin{itemize}
+\item $x$,
+\item $\l x.x$, and
+\item $\l x.x~y$.  
+\end{itemize}
+\end{example}
+
+\begin{definition}[Lambda Abstraction and Application]
+\label{def:lambda::syn::abstraction}
+The term $\l x.x$ is called \defn{(lambda) abstraction},
+%
+and the term $t_1~t_2$ is known as \defn{ application}.
+%
+
+An intuitive way of thinking of $\l x.t$ is as a function that takes
+$x$ and computes the result in its body $t$.
+\end{definition}
+
+\begin{gram}[Abstract versus Concrete Syntax]
+\label{grm:lambda::syn::abs-and-conc} 
+This inductive definition of lambda calculus is an \emph{abstract syntax}:
+%
+it defines the set of properly parsed terms (i.e., abstract syntax
+trees).  
+%
+
+It does not tell us how to read a lambda term as written in
+\emph{concrete syntax}.  
+%
+For example, given $\l x. x~y$, we can parse it as 
+$(\l x.x~y)$ or $(\l x. x) y$.  
+%
+Similarly, we can parse $t_1~t_2~t_3$ as
+$(t_1~t_2)~t_3$ or $t_1~(t_2~t_3)$.
+\end{gram}
+
+\begin{gram}[Disambiguation Conventions]
+\label{grm:lambda::syn::conventions} 
+We will use parenthesis to aid in parsing (to disambiguate the
+syntax).  To minimize parenthesis, we will have the following
+conventions:
+\begin{enumerate}
+\item Application associates to the left.
+\item The body of a lambda terms extends as far as right as possible. 
+\end{enumerate}
+
+With this convention $\l x. x~y$ is parsed as $\l x. (x~y)$ and $t_1~
+t_2~t_3$ is parsed as $(t_1~t_2)~t_3$.
+\end{gram}
+
+
+\begin{definition}[Inference Rules]
+\label{def:lambda::syn::inference}
+We can define the abstract syntax of Lambda Calculus by using inference rules.
+%
+Given a countable set of variables $V$, the set of lambda terms is
+defined as follows.
+
+\begin{enumerate}
+
+\item{$\infer {x\in {\cal T}} {x\in V}$}
+
+\item{$\infer  {t_1~t_2\in {\cal T}} {t_1\in {\cal T} \\t_2\in {\cal T}}$}
+
+\item{$\infer  {\l x.t\in {\cal T}} {x\in V \\t\in {\cal T}}$}
+\end{enumerate}
+
+\end{definition}
+
+\begin{exercise}
+Convince yourself that the two definitions above, 
+%
+the  \href{def:lambda::syn::inductive} and \href{def:lambda::syn::inference}
+%
+are equivalent.
+\end{exercise}
+
+\begin{definition}[BNF Style]
+\label{def:lambda::syn::bnf} 
+We can define the syntax of Lambda Calculus by using the BNF style. 
+%
+Assuming that $x$ ranges over a countable set of variables, the set of
+lambda terms $t$ is defined as follows.
+
+\[
+t \bnfdef x \bnfalt t_1 t_2 \bnfalt \l x.t
+\]
+\end{definition}
+
+
+
+\begin{exercise}
+\label{xrcs:lambda::syn::bnf} 
+Suppose that our syntax allow us to write natural numbers and add
+them.  For example, we may have terms like this $1, 2, +~1~2$.
+
+Now, what does the following lambda terms do?
+\begin{enumerate}
+\item $\l x. +~x~1$,
+\item $\l x. \l y. +~x~y$,
+\item $\l x. \l y. \l z.  z (+~x~y)$.
+\end{enumerate}
+\end{exercise}
+
+
+\begin{gram}[Summary]
+\label{grm:lambda::syn::summary} 
+What is remarkable about Lambda Calculus is that just a one line definition suffices to define all of computation.
+%
+We don't need to talk about ``tapes'', ``cells'' ``instructions'', ``states'', etc, which are needed even in the most basic definition of Turing Machine.
+%
+Not only it is  elegant, but it is also powerful: it allows expressing sophisticated algorithms clearly and concisely.
+%
+
+\end{gram}
+
+\begin{note}
+\label{nt:lambda::syn::pl} 
+Even many modern programming languages today lack the features of Lambda Calculus.
+%
+Though many are also busy trying to add them (which is not always easy).
+%
+For example,
+the C++17 has now support for Lambda expressions as outlined 
+%
+\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0170r1.pdf}
+{in this document}
+%
+from the C++ Standard Committee.
+
+For good measure, perhaps they could have waited a few more
+years to match the 100th year invention of Lambda Calculus!
+\end{note}
+
+
+\section{Bound and Free Variables}
+\label{sec:lambda::variables}
+
+\begin{definition}[Argument and Bindig]
+Consider a lambda abstraction of the form $\l x. t$, which denotes a
+function.
+%
+We refer to the variable $x$ as the \defn{formal parameter} or more
+simply as the \defn{argument} of the abstraction (function),
+%
+and
+%
+say that the abstractions \defn{binds} $x$.
+%
+\end{definition}
+
+\begin{definition}[Bound and Free Variables]
+The occurrence of a variable is \defn{bound} if there is an enclosing
+lambda abstraction that binds the variable, and is \defn{free}
+otherwise.
+\end{definition}
+
+\begin{example}
+Consider the lambda abstraction, $\l x. x + y$.  In order to evaluate
+the function, for a particular argument $x$, we need to know
+the value of $y$.  The variable $y$ in this case is free and $x$
+is bound; $\l$ binds $x$.  
+\end{example}
+
+
+\begin{example} 
+  Some example lambda abstractions and their bound and free variables.
+\begin{enumerate}
+\item $\l x. x$ is the identity function. Here $x$ is a bound variable.
+\item $\l x. y$ is the constant ``$y$'' function. Here $y$ is a free variable.
+\item $\l x. x~y$ has $x$ as a bound variable and $y$ as a free variable.
+\item $\l x. (\l y. x~y)$ has both variables bound.
+\item $~x~\l x. x + 1$.  In this term the first occurrence of $x$ is
+  free and the second is bound.
+\end{enumerate}
+\end{example}
+
+
+\begin{definition}[Free Variables]
+\label{def:FV}
+The set of \defn{free variables} of a term $t$, written as $FV(t)$,
+is defined as 
+\begin{enumerate}
+\item if $t = x$ then $FV(x) = \{ x \}$, or
+\item if $t = t_1~t_2$ then $FV(t_1~t_2)=FV(t_1) \cup FV(t_2)$, and
+\item if $t = \l x. t$ then $FV(\l x.t)=FV(t) \setminus \{x\}$
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Closed and Open Terms]
+A term $t$ is closed if $FV(t) = \varnothing$. Otherwise $t$ is open. 
+\end{definition}
+
+
+
+
+\section{Substitution}
+\label{sec:substitution}
+
+A lambda abstraction denotes a function.  How do we evaluate a
+function or a lambda abstraction at a particular value?  For example,
+the term $(\l x.+~1~x)2$ denotes the application of $(\l x.+~1~x)$ to
+the parameter $2$.  To evaluate such a term we would like to replace
+the occurrences of the formal parameter $x$ with the value $2$.  For
+example, for $(\l x.+~1~x)~2$ evaluates to $(+~1~2)$.  This is an
+example substitution, where we substitute the value $2$ for the
+variable $x$ in $(\l x.+~1~x)$.  Formally, we define substitution as
+follows.
+
+\begin{definition}
+The substitution of a term, $t'$ for a variable $x \in V$ in a term
+$t$, denoted by $[t'/x]t$, is an instance of $t$ where all the free
+occurrences $x$ is replaced by the term $t'$.
+\end{definition}
+
+Throughout this course, we will use the notation $[t'/x]t$ to denote a
+substitution of $t'$ for $x$ in $t$.  Different notations are
+preferred by different textbooks or authors. Two other commonly used
+notations are $t[t'/x]$ and $[x:=t']t$.  Pierce's book uses the
+notation $[x \rightarrow t']t$.
+
+
+\begin{example}
+Some example substitutions.
+\begin{enumerate}
+\item $[\l y.y/x] (x~x)= (\l y.y)~(\l y.y)$
+
+\item $[\l y.y/x] (\l x.x) = \l x.x$ ($x$ is not free.)
+
+\item $[y/x](\l z.x) = \l z.y$
+
+\end{enumerate}
+\end{example}
+
+A substitution, as we defined it, is actually ``incorrect''.  For
+example, consider the lambda abstraction $\l y.x$, the constant
+function, and the substitution $[y/x](\l y.x)$, which is equal to $\l
+y.y$, the identity function.  Thus, the substitution would naively
+change the constant function into the identity function.  Here, the
+problem is that the variable $x$, a free variable, is substituted with
+$y$, which then becomes bound by the lambda abstraction.  In this
+case, we say that $y$ is \emph{captured} in the substitution.
+
+We do not want to transform free variables into bound variables during
+the substitution process.  We need to redefine substitution to avoid
+capture. What can we do?  Consider the following situation: given a
+program which has a function that takes a variable $x$ and has a
+variable $y$ in its body, we can change the name of $y$ to $z$ without
+any modification of the results, but we cannot change the name of $y$
+to $x$ without adversely affecting the results. The next definition
+avoids capture.
+ 
+\begin{definition} [Capture Avoiding substitution]
+\label{def:sub}
+\[
+[t/x]y = \left\{ \begin{array}{ll}
+        t & if~y = x \\
+        y & if~y\neq x \\
+        \end{array} \right.
+\]
+
+
+\[
+[t/x](t_1~t_2) = [t/x]t_1~[t/x]t_2.
+ \]
+
+\[
+[t'/x](\l y.t) = 
+\left\{ \begin{array}{ll}
+
+\l y.t &\mbox{if}~ x = y \mbox{ (y is bound)} \\
+
+\l y.[t'/x]t &\mbox{if}~ x \neq y \mbox { and } y \not \in FV(t') \\
+
+\end{array} \right. 
+\]
+\end{definition}
+
+\begin{flex}
+\begin{exercise}
+What does the substitution $[\l y.x~y~y/z](\l x.x~z)$ yield?
+\end{exercise}
+\begin{solution}
+This substitution is undefined.
+\end{solution}
+\end{flex}
+
+\begin{flex}
+\begin{exercise}
+How about the substitution  $[\l y.x~y~y/z](\l y.y~z)$
+\end{exercise}
+\begin{solution}
+$\l y.y~(\l y.x~y~y)$
+\end{solution}
+\end{flex}
+
+According to this definition a substitution that causes capture is
+undefined.  But something is just not right, because the lambda
+abstractions $\l x.x~z$ and $\l y.y~z$ differ only in the name of
+their bound variables.  Lambda abstractions denote functions, thus
+these two lambda abstractions are the same; it should not matter what
+the bound variables are named.
+
+\section{Alpha Conversion and Alpha Equivalence}
+One way to avoid capture is to rename the bound variables in a lambda
+abstraction.  To goal is to ensure that no bound variable has the same
+name as a free variable in the term being substituted.  
+
+This process of renaming the bound variables is called
+$\alpha$-conversion or $\alpha$-variation.  Two terms that are
+reducible to each other by $\alpha$-conversions are \emph{alpha
+  equivalent}. We denote $\alpha$-equivalent terms $t_1$ and $t_2$ as
+$t_1 \eqa t_2$.  
+
+\begin{enumerate}
+\item $\l x.x \eqa \l y.y$. 
+\item $\l x. \l y. \l z. x ~y~z \eqa \l z. \l y. \l x. z~y~x$.
+\item $\l x.t \eqa \l y.[y/x]t$ if  $y \not\in FV(t)$.
+\end{enumerate}
+
+\begin{exercise}
+Show that $\eqa$ is an equivalence relation.
+\end{exercise}
+
+
+Alpha conversion gives us a way to define substitution without
+worrying about capture.  
+\begin{definition}[Substitution with Explicit Alpha Conversion]
+\[
+[t/x]y = \left\{ \begin{array}{ll}
+        t & if~y = x \\
+        y & if~y\neq x \\
+        \end{array} \right.
+\]
+
+
+\[
+[t/x](t_1~t_2) = [t/x]t_1~[t/x]t_2.
+ \]
+
+
+
+\[[t'/x](\l y.t)  =
+\left\{ \begin{array}{ll}
+        \l y.t&\mbox{if}~x = y \\
+        \l z. [t'/x] [z/y] t
+        &\mbox{if}~ x \not= y ~ \land ~ z \not\in FV(t) \cup FV(t') \\
+       \end{array} \right. \]
+\end{definition}
+
+The idea of this definition is to rename formal variable of the lambda
+abstraction so that it does not occur freely in $t'$.  This ensures
+that no free variables of $t'$ are captured.  This is not enough,
+however, because we also have to make sure that we do not capture the
+free variables of $t$ itself. 
+
+Note that, in this definition, substitution is a relation not a
+function.  That is the result of a substitution is a set of terms
+where the renaming take different forms.  More precisely, the variable
+$z$ can take many values (the names of difference variables).  All
+such terms are $\alpha$-equivalent. 
+
+Now that we made precise the idea of alpha conversion, we can now
+forget about it.  From now on, we will work modulo
+$\alpha$-equivalence.  That is, we will not distinguish between two
+terms that are $\alpha$-equivalent.  We can use our old definition,
+with implicit alpha conversion applied as required.
+
+
+\begin{definition}[Substitution with Implicit Alpha Conversion]
+\label{def:sub3}
+\[
+[t/x]y = \left\{ \begin{array}{ll}
+        t & if~y = x \\
+        y & if~y\neq x \\
+        \end{array} \right.
+\]
+
+
+\[
+[t/x](t_1~t_2) = [t/x]t_1~[t/x]t_2.
+ \]
+
+\[
+[t'/x](\l y.t) = 
+\left\{ \begin{array}{ll}
+
+\l y.t &\mbox{if}~ x = y \mbox{ (y is bound)} \\
+
+\l y.[t'/x]t &\mbox{if}~ x \neq y \land y \not \in FV(t') \\
+
+\end{array} \right. 
+\]
+\end{definition}
+
+
+\section{$\beta$-reduction}
+
+In \secref{substitution}, we briefly discussed how to evaluate a
+function with a given parameter by substitution.  We can give an
+operational semantics for lambda terms based on substitution.  The
+idea is to take each application and reduce it to another term by
+applying substitution---this is called \emph{$\beta$ reduction}, and is
+denoted $\redb$.
+
+\begin{definition}[Single-step $\beta$-reduction]
+\[
+\begin{array}{c}
+(\l x.t_1)~t_2 \redb [t_2/x] t_1 \\[4mm]
+\infer{t_1~t_2 \redb t_1'~t_2}{t_1 \redb t'_1}\\[4mm]
+\infer{t_1~t_2 \redb t_1~t'_2}{t_2 \redb t'_2}\\[4mm]
+\infer{\l x.t \redb \l x.t'} {t \redb t'}
+\end{array}
+\]
+\end{definition}
+
+
+We define multi-step beta reduction, denoted $\redbs$, as $0$ or more
+applications of single-step beta reduction rules.  The use of $*$ to
+denote reductions suggests their use in Kleene Algebra of Automata
+Theory.
+
+\begin{definition}[Multi-step $\beta$-reduction]
+\[
+\begin{array}{c}
+\infer{\strut} {t \redbs t}\\[4mm]
+\infer{t \redbs t'} {t \redb t'} \\[4mm]
+\infer{t_1 \redbs t_3} {t_1 \redbs t_2 \\t_2 \redbs t_3} \\[4mm]
+\end{array}
+\]
+\end{definition}
+
+Two terms that are $\beta$-reducible to each other are called
+$\beta$-equivalent, denoted by $\eqb$. 
+
+\begin{definition}[$\beta$-equivalence]
+\[
+\begin{array}{c}
+\infer{\strut} {t \eqb t} \\[4mm]
+\infer{t \eqb t'} {t \redb t'}  \\[4mm]
+\infer{t_1 \eqb t_3} {t_1 \eqb t_2 \\t_2 \eqb t_3}  \\[4mm]
+\infer{t' \eqb t} {t \eqb t'}
+\end{array}
+\]
+\end{definition}
+
+
+\subsection{Evaluation Strategies}
+
+The only means of computing the lambda calculus is beta reduction,
+i.e., the application of a function to its arguments.  In beta
+reduction, the expression being reduced is called a \emph{reducible
+  expression or a redex}.  Given a term, we evaluate that term by
+applying beta reduction to its redexes.  There a often multiple
+redexes in a term, and, in general, we can choose to evaluate any one
+of them.  The following \emph{evaluation strategies} have been
+proposed.  As we will see in the rest of the class, there are
+interesting differences between these strategies in terms of
+``run-time'' behavior of programs.
+
+\begin{description}
+\item[Full beta reduction:] Any redex can be reduced at any time.
+\item[Normal order strategy:] The leftmost and outermost redex is
+  reduced next.
+\item[Call by name strategy:] The leftmost and outermost redex is
+  reduced next but no reductions are allowed under abstractions.
+\item[Call by value:] Like call by name but a redex is reduced only
+  when its right hand-side is a value.
+\end{description}
+
+
+Here is a call-by-value operational semantics for lambda calculus. 
+
+\[
+\begin{array}{c}
+\infer{t_1~t_1 \red t_1'~t_2}{t_1 \red t_1'}\\[2mm]
+\infer{v_1~t_2 \red v_1~t_2'}{t_2 \red t_2'}\\
+\infer{(\l x.t) v \red [v/x]~t}{\strut}
+\end{array}
+\]
+
+\section{Homework Exercise}
+A term $t$ is in normal form if there is no $t'$ such that $t \redb
+t'$.  We say that a term $t$ is \emph{normalizable} if there is some
+$t'$ such that $t \redbs t'$ and $t'$ is in normal form.  Answer the
+following questions and prove your answer (if your answer is yes, an
+example suffices).
+
+\begin{enumerate}
+\item Are there any normalizable terms?
+\item Are there any non-normalizable terms?
+\end{enumerate}
+
+
+
+
+
+
+
