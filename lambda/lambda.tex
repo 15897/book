@@ -56,7 +56,7 @@ $\terms$ is the {\em least} set of the terms that satisfy the following.
 \item{${\cal T}$ is the ``least'' set verifying the above properties}
 \end{enumerate}
 
-Each term in \terms is called a \defn{lambda term}.  
+Each term in $\terms$ is called a \defn{lambda term}.  
 \end{definition}
 
 \begin{example}
@@ -257,23 +257,24 @@ A term $t$ is closed if $FV(t) = \varnothing$. Otherwise $t$ is open.
 
 
 \section{Alpha Conversion and Alpha Equivalence}
-In any abstraction, the formal parameter acts simply as a placeholder and therefore we can change it as we like.
+In any abstraction, the formal parameter acts simply as a placeholder and therefore we can change as long as we don't create a ``clash'' with a free variable.
 %
-For example, consider the abstraction $\l x.t$, where $x$ is the argument. We can rename $x$ to any variable, say $y$, and the abstraction remains the same.
-%  
+For example, consider the abstraction $\l x.t$, where $x$ is the argument. We can rename $x$ to any variable, say $y$, as long as $y$ is not a free variable in $t$.
+%
 This process of renaming the bound variables is called
 \defn{$\alpha$-conversion} or \defn{$\alpha$-variation}.  
 %
 
 \begin{definition}[Alpha-Equivalence]
 Two terms that are reducible to each other by $\alpha$-conversions are
-\emph{alpha equivalent}. We denote $\alpha$-equivalent terms $t_1$ and
+\defn{alpha equivalent}. We denote $\alpha$-equivalent terms $t_1$ and
 $t_2$ as $t_1 \eqa t_2$.
 \end{definition}
 
 \begin{example}
 \begin{enumerate}
 \item $\l x.x \eqa \l y.y$. 
+\item $\l x.y \neqa \l y.y$. 
 \item $\l x. \l y. \l z. x ~y~z \eqa \l z. \l y. \l x. z~y~x$.
 \item $\l x.t \eqa \l y.[y/x]t$ if  $y \not\in FV(t)$.
 \end{enumerate}

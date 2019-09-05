@@ -6,6 +6,7 @@ PREAMBLE = ./templates/preamble-diderot.tex
 PANDOC = pandoc --mathjax -f latex
 
 DC_HOME = ~/DC
+DC_HOME = ~/diderot/guide/bin/macos
 #DC_HOME = ../main-s19/DC/bin
 
 LABELTEX = $(DC_HOME)/texel
@@ -62,9 +63,11 @@ exam:
 ## intro
 intro: book introduction/introduction.tex introduction/introduction.xml
 	$(PDFLATEX) --jobname="introduction" '\includeonly{introduction/introduction}\input{book} '
+	$(PDFLATEX) --jobname="introduction" '\includeonly{introduction/introduction}\input{book} '
 	cp introduction.pdf ./introduction
 
 ## lambda
 lambda: book lambda/lambda.tex lambda/lambda.xml
+	$(PDFLATEX) --jobname="lambda" '\includeonly{lambda/lambda} \input{book} '
 	$(PDFLATEX) --jobname="lambda" '\includeonly{lambda/lambda} \input{book} '
 	cp lambda.pdf ./lambda
