@@ -1,8 +1,8 @@
-\chapter{Lambda Calculus}
+\chapter{Lambda Calculus: History and Syntax}
 \label{ch:lcs}
 
 
-\section{Some History}
+\section{A Brief History}
 \label{sec:lcs::history}
 
 \begin{gram}
@@ -33,7 +33,6 @@ Church and Turing's results are like two sides of a coin.
 Church's result is all about abstraction  offers a mathematical language in which computation can be expressed.
 %
 Turing's result is all about implementation: it convincingly describes how to implement computation.
-%
 \end{gram}
 
 \section{Abstract Syntax of Lambda Calculus}
@@ -200,7 +199,8 @@ years to match the 100th year invention of Lambda Calculus!
 \section{Bound and Free Variables}
 \label{sec:lcs::variables}
 
-\begin{definition}[Argument and Bindig]
+\begin{definition}[Parameters and Binding]
+\label{def:lcs::binding}
 Consider a lambda abstraction of the form $\l x. t$, which denotes a
 function.
 %
@@ -213,7 +213,9 @@ say that the abstractions \defn{binds} $x$.
 %
 \end{definition}
 
+\begin{flex}
 \begin{definition}[Bound and Free Variables]
+\label{def:lcs::bound-and-free}
 The occurrence of a variable is \defn{bound} if there is an enclosing
 lambda abstraction that binds the variable, and is \defn{free}
 otherwise.
@@ -238,10 +240,10 @@ is bound; $\l$ binds $x$.
   free and the second is bound.
 \end{enumerate}
 \end{example}
-
+\end{flex}
 
 \begin{definition}[Free Variables]
-\label{def:FV}
+\label{def:lcs::fv}
 The set of \defn{free variables} of a term $t$, written as $FV(t)$,
 is defined as 
 \begin{enumerate}
@@ -252,22 +254,31 @@ is defined as
 \end{definition}
 
 \begin{definition}[Closed and Open Terms]
+\label{def:lcs::open-closed}
 A term $t$ is closed if $FV(t) = \varnothing$. Otherwise $t$ is open. 
 \end{definition}
 
 
 \section{Alpha Conversion and Alpha Equivalence}
+\label{sec:lcs::alpha}
 In any abstraction, the formal parameter acts simply as a placeholder and therefore we can change as long as we don't create a ``clash'' with a free variable.
 %
 For example, consider the abstraction $\l x.t$, where $x$ is the argument. We can rename $x$ to any variable, say $y$, as long as $y$ is not a free variable in $t$.
 %
-This process of renaming the bound variables is called
-\defn{$\alpha$-conversion} or \defn{$\alpha$-variation}.  
-%
 
-\begin{definition}[Alpha-Equivalence]
-Two terms that are reducible to each other by $\alpha$-conversions are
-\defn{alpha equivalent}. We denote $\alpha$-equivalent terms $t_1$ and
+\begin{flex}
+\begin{definition}[Alpha Conversion and Alpha Equivalence]
+\label{def:lcs::alpha}
+An \defn{$\alpha$-conversion} or \defn{$\alpha$-variation} of a lambda
+term $t$ is
+%
+another term $t'$ where the a bound variable $x$ of $t$ is renamed to another variable $y \not\in FV(t)$.
+%
+We say than two terms that are reducible to each other by $\alpha$-conversions are \defn{alpha equivalent}
+%
+and
+%
+denote $\alpha$-equivalent terms $t_1$ and
 $t_2$ as $t_1 \eqa t_2$.
 \end{definition}
 
@@ -279,8 +290,10 @@ $t_2$ as $t_1 \eqa t_2$.
 \item $\l x.t \eqa \l y.[y/x]t$ if  $y \not\in FV(t)$.
 \end{enumerate}
 \end{example}
+\end{flex}
 
 \begin{exercise}
+\label{xrcs::alphha-eq-is-eq}
 Show that $\eqa$ is an equivalence relation.
 \end{exercise}
 

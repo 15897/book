@@ -66,6 +66,13 @@ intro: book introduction/introduction.tex introduction/introduction.xml
 	$(PDFLATEX) --jobname="introduction" '\includeonly{introduction/introduction}\input{book} '
 	cp introduction.pdf ./introduction
 
+## syntax
+syntax: book lambda/syntax.tex lambda/syntax.xml
+	$(PDFLATEX) --jobname="syntax" '\includeonly{lambda/syntax} \input{book} '
+	$(PDFLATEX) --jobname="syntax" '\includeonly{lambda/syntax} \input{book} '
+	cp syntax.pdf ./lambda/
+
+
 ## lambda
 lambda: book lambda/lambda.tex lambda/lambda.xml
 	$(PDFLATEX) --jobname="lambda" '\includeonly{lambda/lambda} \input{book} '
