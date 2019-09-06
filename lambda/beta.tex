@@ -1,0 +1,314 @@
+\chapter{Substitution and Beta Reduction}
+\label{ch:lambda}
+
+\begin{preamble}
+\href{ch:lcs}{Lambda Calculus} allows write code where function abstraction (lambda terms) and function application are the only means of computation.
+%
+In this chapter, we will see how such computation may be performed by using substitution and beta reduction. 
+\end{preamble}
+
+\section{Substitution}
+\label{sec:lcsb::sub}
+
+In traditional mathematics, the fundamental operation by which human beings ``calculate'' or ``compute'' is via substitution.
+%
+Given a function with some parameter and an argument for the function, we plug in the argument for the parameter.
+%
+For example, if the function is written as 
+\[
+f(x) = x + 1,
+\]  
+then we calculate $f(5)$ by substituting $5$ for $x$ in the ``body'' of $f(\cdot)$, which we may write as $[5/x](x+1)$, to obtain $6$.
+%
+We can define substitution for lambda calculus in essentially the same
+way.
+
+\begin{definition}[Substitution]
+\label{def:lcsb::basic}
+The \defn{substitution} of a term, $t'$ for a variable $x \in V$ in a term
+$t$, denoted by $[t'/x]t$, is an instance of $t$ where all the free
+occurrences $x$ is replaced by the term $t'$.
+\end{definition}
+
+Throughout this course, we will use the notation $[t'/x]t$ to denote a
+substitution of $t'$ for $x$ in $t$.  Different notations are
+preferred by different textbooks or authors. Other commonly used
+notations include $t[t'/x]$, $[x:=t']t$, and  $[x \leftarrow t']t$.  
+
+\begin{example}
+\label{xmpl:lcsb::basic}
+Some example substitutions follow
+\begin{enumerate}
+\item $[\l y.y/x] (x~x)= (\l y.y)~(\l y.y)$
+
+\item $[\l y.y/x] (\l x.x) = \l x.x$ ($x$ is not free.)
+
+\item $[y/x](\l z.x) = \l z.y$
+
+\end{enumerate}
+\end{example}
+
+\begin{gram}[Capture]
+\label{grm:lcsb::capture}
+A substitution, as we defined it, is actually incorrect.  
+%
+For example, consider the lambda abstraction $\l y.x$, the constant
+function, and the substitution $[y/x](\l y.x)$, which is equal to $\l
+y.y$, the identity function.
+%
+Thus, this substitution changes the constant function into the
+identity function.
+%
+The problem is that the variable $x$, a free
+variable, is substituted with $y$, which then becomes bound by the
+lambda abstraction.  In this case, we say that $y$ is \defn{captured}
+in the substitution.
+%
+We can define the ``capture-avoiding substitution'' as follows. 
+\end{gram}
+
+
+\begin{definition}[Capture-Avoiding substitution]
+\label{def:lcsb::sub-avoid}
+\[
+[t/x]y = \left\{ \begin{array}{ll}
+        t & if~y = x \\
+        y & if~y\neq x \\
+        \end{array} \right.
+\]
+
+
+\[
+[t/x](t_1~t_2) = [t/x]t_1~[t/x]t_2.
+ \]
+
+\[
+[t'/x](\l y.t) = 
+\left\{ \begin{array}{ll}
+
+\l y.t &\mbox{if}~ x = y \mbox{ (y is bound)} \\
+
+\l y.[t'/x]t &\mbox{if}~ x \neq y \mbox { and } y \not \in FV(t') \\
+
+\end{array} \right. 
+\]
+\end{definition}
+
+\begin{flex}
+\begin{exercise}
+\label{xrcs:lcsb::sub-undef}
+Using Definition \ref{def:lcsb::sub-avoid},
+%
+what does the substitution $[\l y.x~y~y/z](\l x.x~z)$ yield?
+\end{exercise}
+\begin{solution}
+\label{sol:lcsb::sub-basic}
+This substitution is undefined.
+\end{solution}
+\end{flex}
+
+\begin{flex}
+\begin{exercise}
+\label{xrcs:lcsb::sub-rename}
+Using Definition \ref{def:lcsb::sub-avoid},
+what does the substitution  $[\l y.x~y~y/z](\l y.y~z)$ yield?
+\end{exercise}
+\begin{solution}
+$\l y.y~(\l y.x~y~y)$
+\end{solution}
+\end{flex}
+
+
+We can refine
+%
+Definition \ref{def:lcsb::sub-avoid},
+%
+to deal with capture by actively renaming bound variables.
+%
+The idea is hinted by the two exercises above:  the lambda
+abstractions $\l x.x~z$ and $\l y.y~z$ used in the examples differ only in the name of their bound variables.  
+%
+We know that these two abstractions are 
+%
+\href{def:lcs::alpha}{alpha-equivalent}, and
+%
+we can alpha-convert lambda abstractions to avoid capture.  
+
+\begin{flex}
+\begin{definition}[Substitution with Explicit Alpha Conversion]
+\label{def:lcsb::sub-exp}
+\[
+[t/x]y = \left\{ \begin{array}{ll}
+        t & if~y = x \\
+        y & if~y\neq x \\
+        \end{array} \right.
+\]
+
+
+\[
+[t/x](t_1~t_2) = [t/x]t_1~[t/x]t_2.
+ \]
+
+
+
+\[[t'/x](\l y.t)  =
+\left\{ \begin{array}{ll}
+        \l y.t&\mbox{if}~x = y \\
+        \l z. [t'/x] [z/y] t
+        &\mbox{if}~ x \not= y ~ \land ~ z \not\in FV(t) \cup FV(t') \\
+       \end{array} \right. \]
+\end{definition}
+
+\begin{remark}
+The idea of this definition is to alpha convert lambda
+abstractions so that its formal parameter does not occur freely in $t'$.
+%
+When renaming the formal parameter, it is important to choose a variable that does not occur freely in the body of the lambda term and in the term being substituted.
+\end{remark}
+
+\begin{note}
+The substitution above is a relation and not a function: the result of
+a substitution is a set of terms that differ based on the choice of
+the variable name chosen.  All such terms are $\alpha$-equivalent.
+\end{note}
+\end{flex}
+
+\begin{gram}[Working Modulo Alpha Conversion]
+Now that we made precise the idea of alpha conversion and how
+substitution via alpha conversion works, we can now forget about it.
+%
+From now on, we will work modulo $\alpha$-equivalence.  That is, we
+will not distinguish between two terms that are $\alpha$-equivalent.
+%
+We can  use a simpler  definition for substitution, with implicit alpha conversion applied as needed; this definition is reproduced below for convenience.
+\end{gram}
+
+
+\begin{definition}[Substitution with Implicit Alpha Conversion]
+\label{def:lambda:sub-final}
+\[
+[t/x]y = \left\{ \begin{array}{ll}
+        t & if~y = x \\
+        y & if~y\neq x \\
+        \end{array} \right.
+\]
+
+
+\[
+[t/x](t_1~t_2) = [t/x]t_1~[t/x]t_2.
+ \]
+
+\[
+[t'/x](\l y.t) = 
+\left\{ \begin{array}{ll}
+
+\l y.t &\mbox{if}~ x = y \mbox{ (y is bound)} \\
+
+\l y.[t'/x]t &\mbox{if}~ x \neq y \land y \not \in FV(t') \\
+
+\end{array} \right. 
+\]
+\end{definition}
+
+\section{$\beta$-reduction}
+In \secref{substitution}, we briefly discussed how to evaluate a
+function with a given parameter by substitution.  We can give an
+operational semantics for lambda terms based on substitution.  The
+idea is to take each application and reduce it to another term by
+applying substitution---this is called \emph{$\beta$ reduction}, and is
+denoted $\redb$.
+
+\begin{definition}[Single-step $\beta$-reduction]
+\[
+\begin{array}{c}
+(\l x.t_1)~t_2 \redb [t_2/x] t_1 \\[4mm]
+\infer{t_1~t_2 \redb t_1'~t_2}{t_1 \redb t'_1}\\[4mm]
+\infer{t_1~t_2 \redb t_1~t'_2}{t_2 \redb t'_2}\\[4mm]
+\infer{\l x.t \redb \l x.t'} {t \redb t'}
+\end{array}
+\]
+\end{definition}
+
+
+We define multi-step beta reduction, denoted $\redbs$, as $0$ or more
+applications of single-step beta reduction rules.  The use of $*$ to
+denote reductions suggests their use in Kleene Algebra of Automata
+Theory.
+
+\begin{definition}[Multi-step $\beta$-reduction]
+\[
+\begin{array}{c}
+\infer{\strut} {t \redbs t}\\[4mm]
+\infer{t \redbs t'} {t \redb t'} \\[4mm]
+\infer{t_1 \redbs t_3} {t_1 \redbs t_2 \\t_2 \redbs t_3} \\[4mm]
+\end{array}
+\]
+\end{definition}
+
+Two terms that are $\beta$-reducible to each other are called
+$\beta$-equivalent, denoted by $\eqb$. 
+
+\begin{definition}[$\beta$-equivalence]
+\[
+\begin{array}{c}
+\infer{\strut} {t \eqb t} \\[4mm]
+\infer{t \eqb t'} {t \redb t'}  \\[4mm]
+\infer{t_1 \eqb t_3} {t_1 \eqb t_2 \\t_2 \eqb t_3}  \\[4mm]
+\infer{t' \eqb t} {t \eqb t'}
+\end{array}
+\]
+\end{definition}
+
+
+\subsection{Evaluation Strategies}
+
+The only means of computing the lambda calculus is beta reduction,
+i.e., the application of a function to its arguments.  In beta
+reduction, the expression being reduced is called a \emph{reducible
+  expression or a redex}.  Given a term, we evaluate that term by
+applying beta reduction to its redexes.  There a often multiple
+redexes in a term, and, in general, we can choose to evaluate any one
+of them.  The following \emph{evaluation strategies} have been
+proposed.  As we will see in the rest of the class, there are
+interesting differences between these strategies in terms of
+``run-time'' behavior of programs.
+
+\begin{description}
+\item[Full beta reduction:] Any redex can be reduced at any time.
+\item[Normal order strategy:] The leftmost and outermost redex is
+  reduced next.
+\item[Call by name strategy:] The leftmost and outermost redex is
+  reduced next but no reductions are allowed under abstractions.
+\item[Call by value:] Like call by name but a redex is reduced only
+  when its right hand-side is a value.
+\end{description}
+
+
+Here is a call-by-value operational semantics for lambda calculus. 
+
+\[
+\begin{array}{c}
+\infer{t_1~t_1 \red t_1'~t_2}{t_1 \red t_1'}\\[2mm]
+\infer{v_1~t_2 \red v_1~t_2'}{t_2 \red t_2'}\\
+\infer{(\l x.t) v \red [v/x]~t}{\strut}
+\end{array}
+\]
+
+\section{Homework Exercise}
+A term $t$ is in normal form if there is no $t'$ such that $t \redb
+t'$.  We say that a term $t$ is \emph{normalizable} if there is some
+$t'$ such that $t \redbs t'$ and $t'$ is in normal form.  Answer the
+following questions and prove your answer (if your answer is yes, an
+example suffices).
+
+\begin{enumerate}
+\item Are there any normalizable terms?
+\item Are there any non-normalizable terms?
+\end{enumerate}
+
+
+
+
+
+
+
