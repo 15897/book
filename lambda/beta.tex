@@ -210,65 +210,65 @@ We can  use a simpler  definition for substitution, with implicit alpha conversi
 \]
 \end{definition}
 
-\section{$\beta$-reduction}
-In \secref{substitution}, we briefly discussed how to evaluate a
-function with a given parameter by substitution.  We can give an
-operational semantics for lambda terms based on substitution.  The
-idea is to take each application and reduce it to another term by
-applying substitution---this is called \emph{$\beta$ reduction}, and is
-denoted $\redb$.
+\section{Beta Reduction}
 
-\begin{definition}[Single-step $\beta$-reduction]
+Lambda calculus has a remarkably simple syntax.  It claims that all you need to compute is a variable,  function abstraction, and function application.
+%
+The actual computation itself is also equally elegant: all we need is a single rule: beta reduction.
+%
+
+\begin{definition}[Reducible Expression and Beta Reduction]
+\label{def:lcb:beta-reduction}
+We say that a term of the form 
 \[
-\begin{array}{c}
-(\l x.t_1)~t_2 \redb [t_2/x] t_1 \\[4mm]
-\infer{t_1~t_2 \redb t_1'~t_2}{t_1 \redb t'_1}\\[4mm]
-\infer{t_1~t_2 \redb t_1~t'_2}{t_2 \redb t'_2}\\[4mm]
-\infer{\l x.t \redb \l x.t'} {t \redb t'}
-\end{array}
+(\l x.t_1)~t_2 
+\]
+is  a \defn{reducible expression} or \defn{redex},
+%
+and
+%
+define \defn{beta reduction} as a function that maps a redex to its substituted form, i.e.,
+\[
+(\l x.t_1)~t_2 \redb [t_2/x] t_1 .
 \]
 \end{definition}
 
-
-We define multi-step beta reduction, denoted $\redbs$, as $0$ or more
-applications of single-step beta reduction rules.  The use of $*$ to
-denote reductions suggests their use in Kleene Algebra of Automata
-Theory.
-
-\begin{definition}[Multi-step $\beta$-reduction]
+\begin{example}
+The following term is a redex
 \[
-\begin{array}{c}
-\infer{\strut} {t \redbs t}\\[4mm]
-\infer{t \redbs t'} {t \redb t'} \\[4mm]
-\infer{t_1 \redbs t_3} {t_1 \redbs t_2 \\t_2 \redbs t_3} \\[4mm]
-\end{array}
+(\l z. z (\l x. \l y. x)) (\l y. y~x_1~x_2), 
 \]
-\end{definition}
-
-Two terms that are $\beta$-reducible to each other are called
-$\beta$-equivalent, denoted by $\eqb$. 
-
-\begin{definition}[$\beta$-equivalence]
+and thus can be reduced via beta reduction
 \[
-\begin{array}{c}
-\infer{\strut} {t \eqb t} \\[4mm]
-\infer{t \eqb t'} {t \redb t'}  \\[4mm]
-\infer{t_1 \eqb t_3} {t_1 \eqb t_2 \\t_2 \eqb t_3}  \\[4mm]
-\infer{t' \eqb t} {t \eqb t'}
-\end{array}
+(\l z. z (\l x. \l y. x)) (\l y. y~x_1~x_2) 
+\redb
+(\l y. y~x_1~x_2) (\l x. \l y. x).
 \]
-\end{definition}
+
+Now the resulting term is also a redex and can be reduced, and in fact a few more steps:
+\[
+(\l y. y~x_1~x_2) (\l x. \l y. x).
+\redb
+(\l x. \l y. x)~~x_1~x_2
+\redb
+x_1.
+\]
+\end{example}
 
 
-\subsection{Evaluation Strategies}
+\section{Evaluation Strategies}
 
-The only means of computing the lambda calculus is beta reduction,
-i.e., the application of a function to its arguments.  In beta
-reduction, the expression being reduced is called a \emph{reducible
-  expression or a redex}.  Given a term, we evaluate that term by
-applying beta reduction to its redexes.  There a often multiple
-redexes in a term, and, in general, we can choose to evaluate any one
-of them.  The following \emph{evaluation strategies} have been
+
+Beta reduction allows evaluating a lambda term by repeatedly performing substitution.  Because there can be many redexes in a lambda term, there can be many ways to evaluate a term.  
+%
+Over the many decades, researchers have proposed many evaluation strategies and studied their properties.
+%
+It turns out that  
+...
+
+COMPLETE
+
+ The following \emph{evaluation strategies} have been
 proposed.  As we will see in the rest of the class, there are
 interesting differences between these strategies in terms of
 ``run-time'' behavior of programs.

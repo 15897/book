@@ -72,6 +72,12 @@ syntax: book lambda/syntax.tex lambda/syntax.xml
 	$(PDFLATEX) --jobname="syntax" '\includeonly{lambda/syntax} \input{book} '
 	cp syntax.pdf ./lambda/
 
+## beta
+beta: book lambda/beta.tex lambda/beta.xml
+	$(PDFLATEX) --jobname="beta" '\includeonly{lambda/beta} \input{book} '
+	$(PDFLATEX) --jobname="beta" '\includeonly{lambda/beta} \input{book} '
+	cp beta.pdf ./lambda/
+
 
 ## lambda
 lambda: book lambda/lambda.tex lambda/lambda.xml
