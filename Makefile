@@ -78,6 +78,12 @@ beta: book lambda/beta.tex lambda/beta.xml
 	$(PDFLATEX) --jobname="beta" '\includeonly{lambda/beta} \input{book} '
 	cp beta.pdf ./lambda/
 
+## code
+code: book lambda/code.tex lambda/code.xml
+	$(PDFLATEX) --jobname="code" '\includeonly{lambda/code} \input{book} '
+	$(PDFLATEX) --jobname="code" '\includeonly{lambda/code} \input{book} '
+	cp code.pdf ./lambda/
+
 
 ## lambda
 lambda: book lambda/lambda.tex lambda/lambda.xml

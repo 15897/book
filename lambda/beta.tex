@@ -1,4 +1,4 @@
-\chapter{Substitution and Beta Reduction}
+\chapter{Lambda Calculus: Beta Reduction}
 \label{ch:lambda}
 
 \begin{preamble}
@@ -214,11 +214,19 @@ We can  use a simpler  definition for substitution, with implicit alpha conversi
 
 Lambda calculus has a remarkably simple syntax.  It claims that all you need to compute is a variable,  function abstraction, and function application.
 %
-The actual computation itself is also equally elegant: all we need is a single rule: beta reduction.
+The actual computation itself is also equally elegant: all we need is a single rule: beta reduction, which ``reduces'' function applications via substitution.
 %
+The ultimate goal of beta reduction is to reduce to a term to a term that cannot be evaluated further, i.e., a normal form.
+
+\begin{definition}[Normal Form]
+\label{def:lcb::normal-form}
+A term $t$ is in  \defn{normal form} if there is no $t'$ such that $t \redb
+t'$.  
+\end{definition}
+
 
 \begin{definition}[Reducible Expression and Beta Reduction]
-\label{def:lcb:beta-reduction}
+\label{def:lcb::beta-reduction}
 We say that a term of the form 
 \[
 (\l x.t_1)~t_2 
@@ -233,7 +241,27 @@ define \defn{beta reduction} as a function that maps a redex to its substituted 
 \]
 \end{definition}
 
+
+\begin{definition}[$\beta$-equivalence]
+\label{def:lcb::beta-eq}
+Two terms that are $\beta$-reducible to each other are called
+\defn{$\beta$-equivalent}, denoted by $\eqb$. 
+\[
+\begin{array}{c}
+\infer {t \eqb t} {\strut} 
+\\[4mm]
+\infer {t \eqb t'} {t \redb t'}  
+\\[4mm]
+\infer {t_1 \eqb t_3} {t_1 \eqb t_2 \\ t_2 \eqb t_3}  
+\\[4mm]
+\infer {t' \eqb t} {t \eqb t'}
+\end{array}
+\]
+\end{definition}
+
+
 \begin{example}
+\label{xmpl:lcb::beta-reduction-1}
 The following term is a redex
 \[
 (\l z. z (\l x. \l y. x)) (\l y. y~x_1~x_2), 
@@ -256,23 +284,42 @@ x_1.
 \end{example}
 
 
-\section{Evaluation Strategies}
+Reduce an expression to normal form typically requires applying beta reduction multiple times.
+% 
+We define multi-step beta reduction, denoted $\redbs$, as $0$ or more
+applications of single-step beta reduction rules.  The use of $*$ to
+denote reductions is borrowed from the work of 
+%
+\href{https://en.wikipedia.org/wiki/Stephen_Cole_Kleene}{Kleene},
+%
+one of the founders of computability theory and a student of Church.
 
+\begin{definition}[Multi-step $\beta$-reduction]
+\label{lcb:beta::betastar}
+\[
+\begin{array}{c}
+\infer {t \redbs t} {\strut} \\[4mm]
+\infer {t \redbs t'} {t \redb t'}  \\[4mm]
+\infer {t_1 \redbs t_3} {t_1 \redbs t_2 \\t_2 \redbs t_3} \\[4mm]
+\end{array}
+\]
+\end{definition}
+
+
+
+\begin{definition}[Normalizable Terms]
+\label{def:lcb::normalizable}
+We say that a term $t$ is \defn{normalizable} if there is some
+$t'$ such that $t \redbs t'$ and $t'$ is in normal form. 
+\end{definition}
+
+
+\section{Evaluation Strategies}
 
 Beta reduction allows evaluating a lambda term by repeatedly performing substitution.  Because there can be many redexes in a lambda term, there can be many ways to evaluate a term.  
 %
-Over the many decades, researchers have proposed many evaluation strategies and studied their properties.
+Over the many decades, researchers have proposed various evaluation algorithms or strategies, including the following.
 %
-It turns out that  
-...
-
-COMPLETE
-
- The following \emph{evaluation strategies} have been
-proposed.  As we will see in the rest of the class, there are
-interesting differences between these strategies in terms of
-``run-time'' behavior of programs.
-
 \begin{description}
 \item[Full beta reduction:] Any redex can be reduced at any time.
 \item[Normal order strategy:] The leftmost and outermost redex is
@@ -284,28 +331,59 @@ interesting differences between these strategies in terms of
 \end{description}
 
 
-Here is a call-by-value operational semantics for lambda calculus. 
+\begin{gram}[Specifying Call-by-Value]
 
+We can specify the call-by-value algorithm by using inference rules:
 \[
 \begin{array}{c}
-\infer{t_1~t_1 \red t_1'~t_2}{t_1 \red t_1'}\\[2mm]
-\infer{v_1~t_2 \red v_1~t_2'}{t_2 \red t_2'}\\
-\infer{(\l x.t) v \red [v/x]~t}{\strut}
+\infer {(\l x.t) v \red [v/x]~t} {\strut}
+\\[2mm]
+\infer {t_1~t_1 \red t_1'~t_2} {t_1 \red t_1'}
+\\[2mm]
+\infer {v_1~t_2 \red v_1~t_2'} {t_2 \red t_2'}
 \end{array}
 \]
+\end{gram}
 
-\section{Homework Exercise}
-A term $t$ is in normal form if there is no $t'$ such that $t \redb
-t'$.  We say that a term $t$ is \emph{normalizable} if there is some
-$t'$ such that $t \redbs t'$ and $t'$ is in normal form.  Answer the
-following questions and prove your answer (if your answer is yes, an
-example suffices).
+\begin{exercise}
+Specify the full-beta-reduction algorithm using inference rules.
+\end{exercise}
 
-\begin{enumerate}
-\item Are there any normalizable terms?
-\item Are there any non-normalizable terms?
-\end{enumerate}
 
+
+\begin{exercise}
+Are there terms in lambda calculus that are normalizable?  Are there terms that are not normalizable?
+\end{exercise}
+
+\begin{exercise}
+Show that call-by-name and call-by-value algorithms are deterministic. 
+%
+That is for each, show that if $t \red t'$ and $t \red t''$, then $t' =
+t''$.
+\end{exercise}
+
+
+%% \begin{solution}
+
+%% \begin{enumerate}
+%% \item Are there any normalizable terms?  
+
+%%   Yes there are many normalizable terms.  Variables are in normal
+%%   form, because we cannot reduce them further, but they are not that
+%%   interesting.  The interesting terms are closed terms that we cannot
+%%   reduce further.  For example, the term $\l~x.x$.  In general, if you
+%%   define a language and a set of values that are consistent with its
+%%   operational semantics, then any value will be in normal form.
+
+%% \item Are there any non-normalizable terms?
+
+%%   Yes, there are many non-normalizable terms.  In general, the terms
+%%   that ``diverge'' or reproduce themselves are not in normal form.
+%%   For example, the term $(\l~x.x~x)~(\l~x.x~x)$ diverges, because it
+%%   beta-reduces to itself.
+
+%% \end{enumerate}
+%% \end{solution}
 
 
 
