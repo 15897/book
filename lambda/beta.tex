@@ -2,9 +2,7 @@
 \label{ch:lambda}
 
 \begin{preamble}
-\href{ch:lcs}{Lambda Calculus} allows write code where function abstraction (lambda terms) and function application are the only means of computation.
-%
-In this chapter, we will see how such computation may be performed by using substitution and beta reduction. 
+This chapter presents the ``beta reduction'', a technique for ``running'' or evaluation \href{ch:lcs}{Lambda Calculus} expressions.
 \end{preamble}
 
 \section{Substitution}
@@ -26,7 +24,7 @@ way.
 \begin{definition}[Substitution]
 \label{def:lcsb::basic}
 The \defn{substitution} of a term, $t'$ for a variable $x \in V$ in a term
-$t$, denoted by $[t'/x]t$, is an instance of $t$ where all the free
+$t$, denoted by $[t'/x]~t$, is an instance of $t$ where all the free
 occurrences $x$ is replaced by the term $t'$.
 \end{definition}
 
@@ -39,9 +37,9 @@ notations include $t[t'/x]$, $[x:=t']t$, and  $[x \leftarrow t']t$.
 \label{xmpl:lcsb::basic}
 Some example substitutions follow
 \begin{enumerate}
-\item $[\l y.y/x] (x~x)= (\l y.y)~(\l y.y)$
+\item $[\l y.y/x]~(x~x)= (\l y.y)~(\l y.y)$
 
-\item $[\l y.y/x] (\l x.x) = \l x.x$ ($x$ is not free.)
+\item $[\l y.y/x]~(\l x.x) = \l x.x$ ($x$ is not free.)
 
 \item $[y/x](\l z.x) = \l z.y$
 
@@ -60,9 +58,9 @@ Thus, this substitution changes the constant function into the
 identity function.
 %
 The problem is that the variable $x$, a free
-variable, is substituted with $y$, which then becomes bound by the
+variable, is substituted by $y$, which then becomes bound by the
 lambda abstraction.  In this case, we say that $y$ is \defn{captured}
-in the substitution.
+by the substitution.
 %
 We can define the ``capture-avoiding substitution'' as follows. 
 \end{gram}
@@ -111,7 +109,7 @@ This substitution is undefined.
 \begin{exercise}
 \label{xrcs:lcsb::sub-rename}
 Using Definition \ref{def:lcsb::sub-avoid},
-what does the substitution  $[\l y.x~y~y/z](\l y.y~z)$ yield?
+what does the substitution  $[\l y.x~y~y/z]~(\l y.y~z)$ yield?
 \end{exercise}
 \begin{solution}
 $\l y.y~(\l y.x~y~y)$
@@ -138,7 +136,7 @@ we can alpha-convert lambda abstractions to avoid capture.
 \begin{definition}[Substitution with Explicit Alpha Conversion]
 \label{def:lcsb::sub-exp}
 \[
-[t/x]y = \left\{ \begin{array}{ll}
+[t/x]~y = \left\{ \begin{array}{ll}
         t & if~y = x \\
         y & if~y\neq x \\
         \end{array} \right.
@@ -146,15 +144,16 @@ we can alpha-convert lambda abstractions to avoid capture.
 
 
 \[
-[t/x](t_1~t_2) = [t/x]t_1~[t/x]t_2.
+[t/x]~(t_1~t_2) = \left([t/x]~t_1\right)~\left([t/x]~t_2\right).
  \]
 
 
 
-\[[t'/x](\l y.t)  =
+\[
+[t'/x]~(\l y.t)  =
 \left\{ \begin{array}{ll}
         \l y.t&\mbox{if}~x = y \\
-        \l z. [t'/x] [z/y] t
+        \l z. [t'/x]~[z/y]~t
         &\mbox{if}~ x \not= y ~ \land ~ z \not\in FV(t) \cup FV(t') \\
        \end{array} \right. \]
 \end{definition}
@@ -229,25 +228,25 @@ and
 %
 define \defn{beta reduction} as a function that maps a redex to its substituted form, i.e.,
 \[
-(\l x.t_1)~t_2 \redb [t_2/x] t_1 .
+(\l x.t_1)~t_2 \redb [t_2/x]~t_1 .
 \]
 \end{definition}
 
 \begin{example}
 The following term is a redex
 \[
-(\l z. z (\l x. \l y. x)) (\l y. y~x_1~x_2), 
+(\l z. z~(\l x. \l y. x))~(\l y. y~x_1~x_2), 
 \]
 and thus can be reduced via beta reduction
 \[
-(\l z. z (\l x. \l y. x)) (\l y. y~x_1~x_2) 
+(\l z. z~ (\l x. \l y. x))~(\l y. y~x_1~x_2) 
 \redb
-(\l y. y~x_1~x_2) (\l x. \l y. x).
+(\l y. y~x_1~x_2)~(\l x. \l y. x).
 \]
 
 Now the resulting term is also a redex and can be reduced, and in fact a few more steps:
 \[
-(\l y. y~x_1~x_2) (\l x. \l y. x).
+(\l y. y~x_1~x_2)~(\l x. \l y. x).
 \redb
 (\l x. \l y. x)~~x_1~x_2
 \redb
