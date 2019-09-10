@@ -1,0 +1,181 @@
+\chapter{...}
+\label{ch:semantics::syntax}
+
+\begin{preamble}
+In terms of expressiveness, lambda calculus is reasonably complete.
+%
+Even though it is devoid of many interesting data types that we would today consider essential for expressing algorithms, e.g., numbers, pairs, recursive functions, these can be encoded in Lambda Calculus.
+%
+Yet, these encodings can be verbose and do not give us the best cost
+bounds (\ref{rmrk:lcc:church-numerals::cost}).
+%
+We therefore typically extend Lambda Calculus with additional construct to support booleans, pairs, variants, etc.
+%
+In this chapter, we consider such an extension. 
+\end{preamble}
+
+\section{Syntax for an Extended Lambda Calculus}
+\label{sec:lce::syntax}
+
+
+\begin{definition}[Booleans, Pairs, and Recursion]
+\label{def:lce::syn} 
+We can define the syntax of Lambda Calculus by using the BNF style. 
+%
+Assuming that $x$ ranges over a countable set of variables, the set of
+lambda terms $t$ is defined as follows.
+
+\[
+t \bnfdef x \bnfalt t_1 t_2 \bnfalt \l x.t
+\]
+\end{definition}
+
+
+
+\begin{exercise}
+\label{xrcs:lce::syn::bnf} 
+Suppose that our syntax allow us to write natural numbers and add
+them.  For example, we may have terms like this $1, 2, +~1~2$.
+
+Now, what does the following lambda terms do?
+\begin{enumerate}
+\item $\l x. +~x~1$,
+\item $\l x. \l y. +~x~y$,
+\item $\l x. \l y. \l z.  z (+~x~y)$.
+\end{enumerate}
+\end{exercise}
+
+
+\begin{gram}[Summary]
+\label{grm:lce::syn::summary} 
+What is remarkable about Lambda Calculus is that just a one line definition suffices to define all of computation.
+%
+We don't need to talk about ``tapes'', ``cells'' ``instructions'', ``states'', etc, which are needed even in the most basic definition of Turing Machine.
+%
+Not only it is  elegant, but it is also powerful: it allows expressing sophisticated algorithms clearly and concisely.
+%
+
+\end{gram}
+
+\begin{note}
+\label{nt:lce::syn::pl} 
+Even many modern programming languages today lack the features of Lambda Calculus.
+%
+Though many are also busy trying to add them (which is not always easy).
+%
+For example,
+the C++17 has now support for Lambda expressions as outlined 
+%
+\href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0170r1.pdf}
+{in this document}
+%
+from the C++ Standard Committee.
+
+For good measure, perhaps they could have waited a few more
+years to match the 100th year invention of Lambda Calculus!
+\end{note}
+
+
+\section{Bound and Free Variables}
+\label{sec:lce::variables}
+
+\begin{definition}[Parameters and Binding]
+\label{def:lce::binding}
+Consider a lambda abstraction of the form $\l x. t$, which denotes a
+function.
+%
+We refer to the variable $x$ as the \defn{formal parameter} or more
+simply as the \defn{parameter} of the abstraction (function),
+%
+and
+%
+say that the abstractions \defn{binds} $x$.
+%
+\end{definition}
+
+\begin{flex}
+\begin{definition}[Bound and Free Variables]
+\label{def:lce::bound-and-free}
+The occurrence of a variable is \defn{bound} if there is an enclosing
+lambda abstraction that binds the variable, and is \defn{free}
+otherwise.
+\end{definition}
+
+\begin{example}
+Consider the lambda abstraction, $\l x. x + y$.  In order to evaluate
+the function, for a particular argument $x$, we need to know
+the value of $y$.  The variable $y$ in this case is free and $x$
+is bound; $\l$ binds $x$.  
+\end{example}
+
+
+\begin{example} 
+  Some example lambda abstractions and their bound and free variables.
+\begin{enumerate}
+\item $\l x. x$ is the identity function. Here $x$ is a bound variable.
+\item $\l x. y$ is the constant ``$y$'' function. Here $y$ is a free variable.
+\item $\l x. x~y$ has $x$ as a bound variable and $y$ as a free variable.
+\item $\l x. (\l y. x~y)$ has both variables bound.
+\item $~x~\l x. x + 1$.  In this term the first occurrence of $x$ is
+  free and the second is bound.
+\end{enumerate}
+\end{example}
+\end{flex}
+
+\begin{definition}[Free Variables]
+\label{def:lce::fv}
+The set of \defn{free variables} of a term $t$, written as $FV(t)$,
+is defined as 
+\begin{enumerate}
+\item if $t = x$ then $FV(x) = \{ x \}$, or
+\item if $t = t_1~t_2$ then $FV(t_1~t_2)=FV(t_1) \cup FV(t_2)$, and
+\item if $t = \l x. t$ then $FV(\l x.t)=FV(t) \setminus \{x\}$
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Closed and Open Terms]
+\label{def:lce::open-closed}
+A term $t$ is closed if $FV(t) = \varnothing$. Otherwise $t$ is open. 
+A closed term is also called a \defn{combinator}.
+\end{definition}
+
+
+\section{Alpha Conversion and Alpha Equivalence}
+\label{sec:lce::alpha}
+In any abstraction, the formal parameter acts simply as a placeholder and therefore we can change as long as we don't create a ``clash'' with a free variable.
+%
+For example, consider the abstraction $\l x.t$, where $x$ is the argument. We can rename $x$ to any variable, say $y$, as long as $y$ is not a free variable in $t$.
+%
+
+\begin{flex}
+\begin{definition}[Alpha Conversion and Alpha Equivalence]
+\label{def:lce::alpha}
+An \defn{$\alpha$-conversion} or \defn{$\alpha$-variation} of a lambda
+term $t$ is
+%
+another term $t'$ where the a bound variable $x$ of $t$ is renamed to another variable $y \not\in FV(t)$.
+%
+We say than two terms that are reducible to each other by $\alpha$-conversions are \defn{alpha equivalent}
+%
+and
+%
+denote $\alpha$-equivalent terms $t_1$ and
+$t_2$ as $t_1 \eqa t_2$.
+\end{definition}
+
+\begin{example}
+\begin{enumerate}
+\item $\l x.x \eqa \l y.y$. 
+\item $\l x.y \neqa \l y.y$. 
+\item $\l x. \l y. \l z. x ~y~z \eqa \l z. \l y. \l x. z~y~x$.
+\item $\l x.t \eqa \l y.[y/x]t$ if  $y \not\in FV(t)$.
+\end{enumerate}
+\end{example}
+\end{flex}
+
+\begin{exercise}
+\label{xrcs::alphha-eq-is-eq}
+Show that $\eqa$ is an equivalence relation.
+\end{exercise}
+
+

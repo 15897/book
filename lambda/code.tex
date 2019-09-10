@@ -319,6 +319,16 @@ times & := & \l m. \l n. m (plus n) c_0
 Write the subtraction operation for church numerals.
 \end{exercise}
 
+\begin{remark}
+\label{rmrk:lcc:church-numerals::cost}
+Even though natural numbers can be encoded is Lambda terms, the encoding has an important undesirable property: many interesting operations could require linear time in the numbers.  
+%
+For example, assuming that each beta reduction takes unit time, adding
+two numbers $n$ and $m$ could require $\Omega(min(n,m))$ time.
+%
+This is not practically acceptable and we would typically not program in Lambda Calculus directly but extend it to support the desired data types directly.
+\end{remark}
+
 \section{Recursion}
 \label{sec:lcc:recursion}
 
