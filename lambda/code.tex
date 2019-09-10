@@ -1,7 +1,8 @@
 \chapter{Coding in Lambda Calculus}
 \label{ch:lcc}
 
-
+\begin{preamble}
+\label{prmbl:lcc}
 Lambda calculus is tiny by all measures: it has three syntactic forms and one rule for evaluation.  
 %
 Its power stems from its support for composition, i.e., the ability to make bigger terms from smaller ones. 
@@ -16,26 +17,32 @@ in this chapter.
 Absence from this accounting will be a notion of ``cost'' or ``efficiency''.
 %
 We will develop an account of cost in the upcoming lectures.
+\end{preamble}
 
 \begin{gram}[Introduction and Elimination Forms]
-
+\label{grm:lcc::intro-elim}
 The basic mechanism through which we implement various data types in lambda calculus is to think about their \defn{elimination forms}, i.e., the way they are actually used.  
 %
 We then walk our way backwards to design the \defn{introduction forms}, i.e., the way values of a data type are actually created. 
 \end{gram}
 
 \section{Multiple Arguments}
+
+\begin{gram}
+\label{grm:lcc::currying}
 In lambda calculus, every function (lambda abstraction) has only one
 argument.  
 %
 But we can also write functions that take multiple arguments by ``currying'', named after mathematician \href{https://en.wikipedia.org/wiki/Haskell_Curry}{Haskell Curry}.
 %
-The basic idea is two nested functions within each other (as many as needed), where each function take a single argument and yields a function that takes the rest of the arguments.
+The basic idea is to nest functions within each other (as many as needed), where each function take a single argument and yields a function that takes the rest of the arguments.
+\end{gram}
 
 \begin{example}[Currying]
+\label{xmpl:lcc::currying}
 The following lambda term is a function that takes two arguments
 \[
-\l x. \l y. x~y
+\l x. \l y. x~y.
 \]
 
 The following lambda term is a function takes three arguments
@@ -45,6 +52,7 @@ The following lambda term is a function takes three arguments
 \end{example}
 
 \begin{note}[Functions as First Class Values]
+\label{nt:lcc::first-class}
 Currying takes advantage of the fact that a lambda abstraction can reduce to another lambda abstraction.
 %
 In other words ``functions can return functions''. 
@@ -56,19 +64,23 @@ More generally, in lambda calculus, functions are ``first class values'' and can
 \section{Church Booleans}
 \label{sec:lcc:bools}
 
+\begin{gram}
+\label{grm:lcc::bools::intro}
 How can we represent boolean values in lambda calculus?  
 %
 To answer this question, let's think about how booleans are
 used.  
 %
-The ``elimination form'' a boolean is the $\cdv{if}$ statement, which
+The ``elimination form'' for a boolean is the $\cdv{if}$ statement, which
 takes a boolean and two branches and picks one of the branches.  
 %
 Thus, one idea would be to represent a boolean value as a function that select their first or second argument depending on their value and  simulate the behavior of an $\cdv{if}$ statement by applying the branches to the boolean
 value.
+\end{gram}
 
 \begin{gram}[Encoding Booleans]
-Based on this intuition, let define $\cdv{true}$ and $\cdv{false}$ as
+\label{grm:lcc::bools::encoding}
+Define $\cdv{true}$ and $\cdv{false}$ as
 \[
 \begin{array}{rcl}
 \cdv{true} & := & \l x. \l y.  x
@@ -78,13 +90,14 @@ Based on this intuition, let define $\cdv{true}$ and $\cdv{false}$ as
 \]
 
 We can now define an $\cdv{if}$ statement as a function that takes a
-boolean and two branches and selects the right branch as follows:
+boolean and two branches and selects the right branch:
 \[
 \cdv{if} := \l x_b. \l y_1. \l y_2. x_b~ y_1~ y_2.
 \]
 \end{gram}
 
 \begin{example}
+\label{xmpl:lcc::bools::encoding}
  Consider the term $\cdv{if}~\cdv{true}~ x~ y$
 \[
 \begin{array}{rcl}
@@ -103,6 +116,7 @@ boolean and two branches and selects the right branch as follows:
 
 
 \begin{gram}[Encoding Boolean Not]
+\label{grm:lcc::bools::not}
 We can encode other operations on booleans such as ``not''.
 %
 Recall that booleans are function that take
@@ -122,6 +136,7 @@ $\cdv{false}$; otherwise it returns $\cdv{true}$.
 \end{gram}
 
 \begin{example}
+\label{xmpl:lcc::bools::not}
 To see how ``not'' works, consider
 \[
 \begin{array}{rcl}
@@ -136,6 +151,7 @@ not~true & = & (\l x_b. \l y. \l z.z~x_b~z~y)~true\\
 
 
 \begin{gram}[Logical And]
+\label{grm:lcc::bools::and}
 The logical ``and'' operation takes two booleans and returns true if both are true and false otherwise.
 %
 We can encode it as follows,
@@ -145,6 +161,7 @@ We can encode it as follows,
 \end{gram}
 
 \begin{gram}[Logical Or]
+\label{grm:lcc::bools::or}
 The logical ``or'' operation takes two booleans and returns true if any one of them is true and false otherwise.
 %
 We can encode it as follows,
@@ -152,6 +169,7 @@ We can encode it as follows,
 \cdv{or} := \l x_1.  \l x_2.  x_1~\cdv{true}~x_2.
 \]
 \end{gram}
+
 
 \section{Pairs}
 \label{sec:lcc:pairs}
@@ -164,27 +182,29 @@ The eliminations forms are \defn{projections} that project out the first and the
  
 
 \begin{gram}[Encoding Pairs]
-To encode pairs, lets think about their elimination forms, which project out the relevant part of the pair.
+\label{grm:lcc:pairs::encoding}
+
+
+To encode pairs in Lambda Calculus, let's consider their elimination forms, which project out the first and the second part of a pair.
 %
-We can thus think of a pair as a function that takes the elimination form as
-an argument and applies it to its components.  
+Thus, one idea would be represent a pair as a function that takes the elimination form as an argument and applies it to its components.  
 %
-The eliminations forms $\cdv{first}$ and $\cdv{snd}$ simply take the
-pair and pass to it a function that projects out the first and
-second component respectively.
+The eliminations forms $\cdv{first}$ and $\cdv{second}$ simply take
+the pair and apply to an argument, which is a function that projects
+out the first and second component respectively.
 
 \[
 \begin{array}{rcl}
-pair & = &  \l x_1. \l x_2.  \l y. y x_1 x_2\\
+\cdv{pair} & = &  \l x_1. \l x_2.  \l y. y x_1 x_2\\
 \cdv{first}  & = & \l x_p. x_p (\l x. \l y. x)\\
-\cdv{snd}  & = & \l x_p. x_p (\l x. \l y. y)\\
+\cdv{second}  & = & \l x_p. x_p (\l x. \l y. y)\\
 \end{array}
 \]
 
 \end{gram}
 %% \begin{flex}
 %% \begin{exercise}
-%% Write the ML code for $pair$, $\cdv{first}$, and $\cdv{snd}$ for pairs
+%% Write the ML code for $pair$, $\cdv{first}$, and $\cdv{second}$ for pairs
 %%   of integers.  Try now for a pair of a boolean and an integer (of
 %%   type \cd{bool*int}).
 %% \end{exercise}
@@ -206,7 +226,10 @@ pair & = &  \l x_1. \l x_2.  \l y. y x_1 x_2\\
 %% \end{flex}
 
 \section{Church Numerals}
+\label{sec:lcc:church-numerals}
 
+\begin{gram}
+\label{grm:lcc:church-numerals::intro}
 Another key construct in mathematics and computing is natural numbers.
 %
 To represent natural numbers in Lambda Calculus, let's again think of their elimination form, i.e., how we use them.
@@ -217,8 +240,10 @@ But they all can be characterized as computing some property of the
 number (e.g., comparisons, sums etc) inductively, starting with zero.
 %
 In fact, natural numbers are nothing but a concrete representation of such induction.
+\end{gram}
 
 \begin{gram}[Encoding Natural Numbers]
+\label{grm:lcc:church-numerals::encoding}
 We can encode a natural number $n$ as a
 function that takes a function $s$ (successor) and $z$ zero and
 applies $s$ to $z$ $n$ times.
@@ -240,6 +265,7 @@ c_2 & = & \l s. \l z. s~(s~z)\\
 
 \begin{flex}
 \begin{gram}[Checking for Zero]
+\label{grm:lcc:church-numerals::iszero}
 We can write a function to test if a natural number is zero as follows
 \[
 \cdv{isZero} := \l x_n.  x_n  (\l x. \cdv{false})~\cdv{true}
@@ -247,6 +273,7 @@ We can write a function to test if a natural number is zero as follows
 \end{gram}
 
 \begin{example}
+\label{xmpl:lcc:church-numerals::iszero}
 Let's apply $isZero$ to $c_0, c_1$ and $c_2$
 \[
 \begin{array}{rcl}
@@ -273,6 +300,7 @@ Let's apply $isZero$ to $c_0, c_1$ and $c_2$
 \end{flex}
 
 \begin{gram}[Arithmetic Operations]
+\label{grm:lcc:church-numerals::arithmetic}
 We can implement arithmetic operations such as ``successor'', ``plus'', and ``times'' as follows:
 \[
 \begin{array}{rcl}
@@ -287,11 +315,15 @@ times & := & \l m. \l n. m (plus n) c_0
 \end{gram}
 
 \begin{exercise}
+\label{xrcs:lcc:church-numerals::subtract}
 Write the subtraction operation for church numerals.
 \end{exercise}
 
-\subsection{Recursion}
+\section{Recursion}
+\label{sec:lcc:recursion}
 
+\begin{gram}
+\label{grm:lcc:recursion::intro}
 Lambda Calculus supports {\em anonymous functions} only, i.e.,
 function that do not have names.  
 %
@@ -307,8 +339,10 @@ By beta reduction we have $\omega~ t =
 t~ t $.  We now have two copies of the term $t$.  Based on this
 intuition, it is possible to construct \defn{fix-point combinators}
 that give us the ``recursive form'' of an anonymous function.
+\end{gram}
 
 \begin{gram}[Open Recursion and Fix Points]
+\label{grm:lcc:recursion::open}
 Suppose we want to write a recursive function $g$.  How can we
 write such a function?  Here is an example
 \[
@@ -324,6 +358,7 @@ written as $\mcd{fix}~g$.
 \end{gram}
 
 \begin{gram}[$Y$ Combinator]
+\label{grm:lcc:recursion::y-combinator}
 Suppose we are given the
 $g$.  To apply $g$ to itself twice, we want to have a way of
 making two copies of $g$, and retain the ability to make further
@@ -352,7 +387,16 @@ would do.  The $Y$ combinator thus suffices as a fix-point
 combinator when using the call-by-name evaluation algorithm.
 \end{gram}
 
+\begin{definition}[$Y$ Combinator]
+\label{def:lcc:recursion::y-combinator}
+Y combinator, defined as follows, is a lambda term that serves as a fix point operator in call-by-name setting
+\[
+Y := \l f.  (\l x. f (x~  x)) (\l x. f~ (x~ x)).
+\]
+\end{definition}
+
 \begin{gram}[$Z$ Combinator]
+\label{grm:lcc:recursion::z-combinator}
 $Y$ combinator does not work in the call-by-value setting, because
 \[
 g~ (Y~ g) \redb g~ ( g~ (Y~ g)),
@@ -368,7 +412,17 @@ Z :=  \l f. (\l x. f~ (\l y. x~ x~ y)) (\l x. f~ (\l y. x~ x~ y)).
 \]
 \end{gram}
 
+\begin{definition}[$Z$ Combinator]
+\label{def:lcc:recursion::z-combinator}
+Z combinator, defined as follows, is a lambda term that serves as a fix point operator in call-by-value setting
+
+\[
+Z :=  \l f. (\l x. f~ (\l y. x~ x~ y)) (\l x. f~ (\l y. x~ x~ y)).
+\]
+\end{definition}
+
 \begin{exercise}
+\label{xrcs:lcc:recursion::z-combinator}
 Define 
 \[
 g := \l f. \l x.  \mcd{if}~x <= 0~\mcd{then}~1~\mcd{else}~x*f
